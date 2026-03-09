@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CGU-beeZ — Question Bank</title>
+    <meta
+      name="description"
+      content="Browse and download CGU previous year question papers"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!-- FontAwesome for Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+
+    <style>
+      :root {
+        --color-primary: #ffdb58; /* Mustard Yellow */
+        --color-background-dark: #0a0a0a; /* Near Black */
+        --color-background-light: #f8f8f8; /* Light Gray */
+        --color-card-dark: #181818;
+        --color-card-light: #ffffff;
+        --color-text-dark: #ffffff;
+        --color-text-light: #1a1a1a;
+        --color-muted-dark: #888888;
+        --color-muted-light: #666666;
+      }
+
+      /* Base Styling for Dark Mode (Default) */
+      .dark {
+        background-color: var(--color-background-dark);
+        color: var(--color-text-dark);
+        font-family: "Inter", sans-serif;
+        transition: background-color 0.3s, color 0.3s;
+      }
+
+      /* Card Styles */
+      .qb-card {
+        background-color: var(--color-card-dark);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transform: translateY(20px);
+        opacity: 0;
+        transition: all 0.5s cubic-bezier(0.2, 0.9, 0.2, 1);
+      }
+      .qb-card.enter {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      /* Light Mode Overrides */
+      .light {
+        background-color: var(--color-background-light);
+        color: var(--color-text-light);
+      }
+      .light .qb-card {
+        background-color: var(--color-card-light);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      /* Chip Styling */
+      .chip {
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid var(--color-muted-dark);
+        background-color: transparent;
+        color: var(--color-muted-dark);
+        transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+      }
+      .chip[aria-pressed="true"] {
+        background-color: var(--color-primary);
+        color: var(--color-background-dark);
+        border-color: var(--color-primary);
+        font-weight: 700;
+        box-shadow: 0 4px 10px rgba(255, 219, 88, 0.2);
+      }
+      .light .chip {
+        border: 1px solid var(--color-muted-light);
+        color: var(--color-muted-light);
+      }
+      .light .chip[aria-pressed="true"] {
+        color: var(--color-background-dark);
+      }
+
+      /* Search Input Focus */
+      .qb-search input:focus {
+        outline: 2px solid var(--color-primary);
+        outline-offset: 2px;
+      }
+
+      /* Panel Styling */
+      .qb-panel {
+        z-index: 50;
+        transform: translateX(100%);
+        transition: transform 0.4s ease-out;
+        background-color: var(--color-background-dark);
+        color: var(--color-text-dark);
+        border-left: 1px solid rgba(255, 219, 88, 0.1);
+      }
+      .qb-panel.open {
+        transform: translateX(0);
+      }
+      .light .qb-panel {
+        background-color: var(--color-card-light);
+        color: var(--color-text-light);
+        border-left: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      /* Button styles (Mustard accent) */
+      .qb-btn {
+        background-color: var(--color-primary);
+        color: var(--color-background-dark);
+        font-weight: 600;
+        transition: background-color 0.2s, transform 0.1s;
+      }
+      .qb-btn:hover {
+        background-color: #facc15; /* Slightly darker yellow */
+      }
+      .qb-btn:active {
+        transform: scale(0.98);
+      }
+
+      .qb-btn.secondary {
+        background-color: transparent;
+        color: var(--color-primary);
+        border: 1px solid var(--color-primary);
+      }
+      .qb-btn.secondary:hover {
+        background-color: rgba(255, 219, 88, 0.1);
+        color: var(--color-primary);
+      }
+
+      /* Utility for Icons */
+      .icon {
+        color: var(--color-primary);
+      }
+
+      /* PDF Viewer Area */
+      #pdfViewerArea canvas {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+      .light #pdfViewerArea canvas {
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Flying Paper for Download Animation */
+      @keyframes fly-out {
+        0% {
+          transform: translate3d(0, 0, 0) scale(0.98);
+          opacity: 0.95;
+        }
+        100% {
+          transform: translate3d(-160px, -220px, 0) scale(0.6);
+          opacity: 0;
+        }
+      }
+      .flying-paper {
+        position: fixed;
+        bottom: 50px;
+        right: 50px;
+        background: var(--color-primary);
+        color: var(--color-background-dark);
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-weight: 600;
+        z-index: 1000;
+        animation: fly-out 0.9s cubic-bezier(0.2, 0.9, 0.2, 1) forwards;
+      }
+
+      /* AI Chat bubble */
+      .ai-chat-bubble {
+        background-color: var(--color-card-dark);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 8px;
+        white-space: pre-wrap;
+      }
+      .light .ai-chat-bubble {
+        background-color: var(--color-card-light);
+        border: 1px solid #eee;
+      }
+      .ai-loading {
+        padding: 16px;
+        text-align: center;
+        color: var(--color-primary);
+      }
+
+      /* Bar Chart styles */
+      .bar-container {
+        display: flex;
+        flex-direction: column-reverse;
+        height: 150px;
+        padding: 8px 0;
+        border-left: 1px solid #333;
+        border-bottom: 1px solid #333;
+      }
+      .bar-chart-row {
+        display: flex;
+        align-items: center;
+        height: 25px;
+        margin-bottom: 4px;
+        font-size: 12px;
+      }
+      .bar-label {
+        width: 120px;
+        flex-shrink: 0;
+        color: var(--color-muted-dark);
+        padding-right: 8px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-align: right;
+      }
+      .bar {
+        height: 100%;
+        background-color: var(--color-primary);
+        border-radius: 0 4px 4px 0;
+        transition: width 1s ease-out;
+        box-shadow: 0 2px 4px rgba(255, 219, 88, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 4px;
+        color: var(--color-background-dark);
+      }
+      .light .bar-container {
+        border-left: 1px solid #ccc;
+        border-bottom: 1px solid #ccc;
+      }
+
+      /* Floating Yellow Bubbles */
+      .bubbles {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .bubbles span {
+        position: absolute;
+        bottom: -50px;
+        width: 10px;
+        height: 10px;
+        background: var(--color-primary);
+        border-radius: 50%;
+        opacity: 0.25;
+        animation: bubbleFloat linear infinite;
+      }
+      @keyframes bubbleFloat {
+        from {
+          transform: translateY(0) scale(1);
+        }
+        to {
+          transform: translateY(-120vh) scale(0.5);
+        }
+      }
+
+      /* Enhanced Navbar Glow */
+      header > div {
+        box-shadow: 0 0 0 rgba(238, 238, 237, 0), 0 10px 30px rgba(0, 0, 0, 0.4);
+        transition: box-shadow 0.3s ease;
+      }
+      header > div:hover {
+        box-shadow: 0 0 20px rgba(255, 219, 88, 0.25),
+          0 10px 30px rgba(0, 0, 0, 0.4);
+      }
+    </style>
+  </head>
+
+  <body class="dark transition-colors duration-300">
+    <!-- Floating Yellow Bubbles -->
+    <div class="bubbles">
+      <span></span><span></span><span></span> <span></span><span></span
+      ><span></span> <span></span><span></span><span></span> <span></span
+      ><span></span><span></span> <span></span><span></span><span></span>
+      <span></span><span></span><span></span> <span></span><span></span
+      ><span></span> <span></span><span></span><span></span> <span></span
+      ><span></span><span></span> <span></span><span></span><span></span>
+    </div>
+
+    <header class="fixed top-0 left-0 right-0 z-40 p-4 sm:p-6">
+      <div
+        class="flex justify-between items-center max-w-7xl mx-auto backdrop-blur-md bg-opacity-70 rounded-xl px-4 py-3 shadow-lg border border-opacity-10 dark:border-white/10 light:border-black/10"
+      >
+        <a
+          class="text-xl font-extrabold tracking-wider text-white dark:text-gray-900 bg-yellow-400 px-3 py-1.5 rounded-lg transition-colors duration-300"
+          href="#"
+          >CGU-beeZ</a
+        >
+        <div class="flex space-x-2 sm:space-x-4 items-center">
+          <button
+            id="openAI"
+            class="qb-btn secondary px-3 py-2 sm:px-4 rounded-full text-sm flex items-center gap-2"
+          >
+            <i class="fas fa-magic icon"></i> AI Assistant
+          </button>
+          <button
+            id="openBookmarks"
+            class="qb-btn secondary px-3 py-2 sm:px-4 rounded-full text-sm flex items-center gap-2"
+          >
+            <i class="fas fa-star icon"></i> Bookmarks
+          </button>
+          <button
+            id="openAdmin"
+            class="qb-btn secondary px-3 py-2 sm:px-4 rounded-full text-sm flex items-center gap-2"
+          >
+            Admin
+          </button>
+          <button
+            id="authBtn"
+            class="qb-btn px-3 py-2 sm:px-4 rounded-full text-sm font-semibold"
+          >
+            Login
+          </button>
+          <button
+            id="themeToggle"
+            class="w-10 h-10 rounded-full flex items-center justify-center border border-opacity-30 dark:border-white/30 light:border-black/30"
+          >
+            <i id="themeIcon" class="fas fa-moon text-yellow-400"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Nav Menu -->
+    <div
+      id="mobileMenu"
+      class="hidden fixed top-24 left-4 right-4 z-40 rounded-xl bg-gray-900 dark:bg-gray-800 border border-gray-700 p-4 space-y-3 shadow-2xl"
+    >
+      <button id="mAI" class="w-full qb-btn secondary">AI Assistant</button>
+      <button id="mBookmarks" class="w-full qb-btn secondary">Bookmarks</button>
+      <button id="mAdmin" class="w-full qb-btn secondary">Admin</button>
+      <button id="mAuth" class="w-full qb-btn">Login</button>
+    </div>
+
+    <main
+      class="max-w-7xl mx-auto pt-24 pb-12 px-4 sm:px-6 lg:px-8 min-h-screen"
+    >
+      <!-- HERO -->
+      <section class="qb-hero mb-12 text-center pt-8">
+        <h1 class="text-5xl sm:text-7xl font-black mb-2 leading-tight">
+          Previous Year <span class="text-yellow-400">Question Papers</span>
+        </h1>
+        <p
+          class="text-xl text-gray-400 dark:text-gray-400 light:text-gray-600 mb-8"
+        >
+          Search, Preview, Download, and get smart insights.
+        </p>
+
+        <!-- SEARCH -->
+        <div class="qb-search max-w-3xl mx-auto relative">
+          <input
+            id="qb-search-input"
+            type="search"
+            class="w-full p-4 rounded-full bg-gray-900 text-white dark:bg-gray-800 dark:text-white light:bg-white light:text-gray-900 border border-gray-700 dark:border-gray-700 light:border-gray-300 shadow-xl pr-16 focus:border-yellow-400 transition-colors"
+            placeholder="Search subject, branch or year…"
+          />
+          <button
+            id="searchClear"
+            class="absolute right-5 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-gray-700 text-yellow-400 text-lg hidden"
+            style="line-height: 1"
+          >
+            ✕
+          </button>
+          <ul
+            id="qb-suggestions"
+            class="qb-suggestions absolute w-full mt-2 bg-gray-900 dark:bg-gray-800 light:bg-white border border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg shadow-2xl z-10 hidden text-left"
+            role="listbox"
+          >
+            <!-- Suggestions populated by JS -->
+          </ul>
+        </div>
+
+        <!-- FILTERS -->
+        <div
+          class="mt-8 flex flex-wrap justify-center items-start gap-4 text-left"
+        >
+          <div class="w-full sm:w-auto">
+            <h4 class="text-sm font-bold text-yellow-400 mb-2">Branch:</h4>
+            <div id="qb-branches" class="chip-group flex flex-wrap gap-2"></div>
+          </div>
+          <div class="w-full sm:w-auto">
+            <h4 class="text-sm font-bold text-yellow-400 mb-2">Subject:</h4>
+            <div id="qb-subjects" class="chip-group flex flex-wrap gap-2"></div>
+          </div>
+          
+          <button
+            id="qb-clear"
+            class="clear qb-btn secondary mt-4 sm:mt-8 px-4 py-2 rounded-full text-sm"
+          >
+            Reset Filters
+          </button>
+        </div>
+      </section>
+
+      <!-- GRID -->
+      <section class="mt-12">
+        <div
+          id="qb-grid"
+          class="qb-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          role="list"
+        ></div>
+        <div
+          id="emptyHint"
+          class="empty-hint text-center py-20 text-gray-500 dark:text-gray-500 light:text-gray-400 text-xl"
+          hidden
+        >
+          <i class="far fa-sad-tear text-4xl mb-4 text-yellow-400"></i><br />
+          😕 No papers found matching your criteria.
+        </div>
+      </section>
+    </main>
+
+    <!-- SLIDE PANEL (Bookmarks, Admin, AI) -->
+    <aside
+      id="qb-panel"
+      class="qb-panel fixed right-0 top-0 h-full w-full sm:w-[420px] shadow-2xl pt-20 px-6 pb-6 overflow-y-auto"
+      aria-hidden="true"
+      role="dialog"
+    >
+      <button
+        id="qb-panel-close"
+        class="absolute top-4 right-4 text-2xl p-2 rounded-full hover:bg-white/10 transition-colors"
+      >
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="qb-panel-content">
+        <!-- Content injected by JS -->
+      </div>
+    </aside>
+
+    <footer
+      class="text-center p-4 text-sm text-gray-500 dark:text-gray-500 light:text-gray-600 border-t border-gray-800 dark:border-gray-800 light:border-gray-200"
+    >
+      © <span id="qb-year"></span> CGU-beeZ • Smart Question Bank
+    </footer>
+
+    <!-- PDF.JS -->
+    <script src="https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.min.js"></script>
+    <script>
+      // Ensure PDF worker is loaded
+      if (typeof pdfjsLib !== "undefined") {
+        pdfjsLib.GlobalWorkerOptions.workerSrc =
+          "https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.min.js";
+      }
+    </script>
+
+    <script>
+      // ---------- JS Logic Start ----------
+
+      /* Bubble randomization */
+      document.querySelectorAll(".bubbles span").forEach((b) => {
+        b.style.left = Math.random() * 100 + "%";
+        b.style.animationDuration = 12 + Math.random() * 15 + "s";
+        b.style.animationDelay = Math.random() * 5 + "s";
+      });
+
+      // Constants
+      const KEY_PAPERS = "qb_papers_v2";
+      const KEY_BOOKMARKS = "qb_bookmarks_v2";
+      const KEY_ANALYTICS = "qb_analytics_v2";
+      const KEY_USER = "qb_user_v2";
+      const KEY_THEME = "qb_theme";
+
+      // ── STEP 4: No more SAMPLE array. Papers come from MongoDB via /papers ──
+      // The SAMPLE constant is intentionally removed.
+      // Papers are fetched once on page load inside loadPapersFromDB().
+
+      // PLACEHOLDER so nothing below breaks before fetch completes:
+//       const SAMPLE = [ // kept only as empty fallback – DB is the source of truth
+//   {
+//     id: "p-cse-physics-1",
+//     title: "Physics",
+//     branch: "CSE",
+//     subject: "Physics",
+//     year: "2025",
+//     downloads: 0,
+//     pdf: "http://localhost:8900/download/69ad21ff00c923e93ce7d1ff",
+//   },
+//   {
+//     id: "p-cse-physics-2",
+//     title: "Physics (Set 2)",
+//     branch: "CSE",
+//     subject: "Physics",
+//     year: "2025",
+//     downloads: 0,
+//     pdf: "./questionPDF/Physics (1).pdf",
+//   },
+//   {
+//     id: "p-cse-applied-maths",
+//     title: "Applied Mathematics",
+//     branch: "CSE",
+//     subject: "Mathematics",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Applied Mathematics.pdf",
+//   },
+//   {
+//     id: "p-cse-ai-ds",
+//     title: "Artificial Intelligence and Data Science",
+//     branch: "CSE",
+//     subject: "AI & DS",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Artificial intelligence and Data Science.pdf",
+//   },
+//   {
+//     id: "p-cse-biology",
+//     title: "Biology and Environmental Science",
+//     branch: "CSE",
+//     subject: "Biology",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Biology and environmental science .pdf",
+//   },
+//   {
+//     id: "p-cse-blockchain",
+//     title: "Blockchain",
+//     branch: "CSE",
+//     subject: "Blockchain",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/BlockChain.pdf",
+//   },
+//   {
+//     id: "p-cse-chemistry",
+//     title: "Chemistry",
+//     branch: "CSE",
+//     subject: "Chemistry",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Chemistry .pdf",
+//   },
+//   {
+//     id: "p-cse-compiler-design",
+//     title: "Compiler Design",
+//     branch: "CSE",
+//     subject: "Compiler Design",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Compiler design .pdf",
+//   },
+//   {
+//     id: "p-cse-cao",
+//     title: "Computer Architecture and Organization",
+//     branch: "CSE",
+//     subject: "CAO",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Computer Architecture and Organization.pdf",
+//   },
+//   {
+//     id: "p-cse-cns",
+//     title: "Computer Networking and Security",
+//     branch: "CSE",
+//     subject: "CNS",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Computer Networking and Security.pdf",
+//   },
+//   {
+//     id: "p-cse-co",
+//     title: "Computer Organization",
+//     branch: "CSE",
+//     subject: "CO",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Computer organization .pdf",
+//   },
+//   {
+//     id: "p-cse-cv",
+//     title: "Computer Vision",
+//     branch: "CSE",
+//     subject: "CV",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Computer Vision.pdf",
+//   },
+//   {
+//     id: "p-cse-dsa",
+//     title: "Data Structures",
+//     branch: "CSE",
+//     subject: "DSA",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Data Structures.pdf",
+//   },
+//   {
+//     id: "p-cse-bigdata",
+//     title: "Data Visualization and Big Data Analysis",
+//     branch: "CSE",
+//     subject: "Big Data",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Data visualization and Big data analysis .pdf",
+//   },
+//   {
+//     id: "p-cse-db",
+//     title: "Database Engineering",
+//     branch: "CSE",
+//     subject: "DBMS",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Database engineering .pdf",
+//   },
+//   {
+//     id: "p-cse-dccn",
+//     title: "DCCN",
+//     branch: "CSE",
+//     subject: "DCCN",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/DCCN.pdf",
+//   },
+//   {
+//     id: "p-cse-daa",
+//     title: "Design and Analysis of Algorithm",
+//     branch: "CSE",
+//     subject: "DAA",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Design and Analysis of Algorithm .pdf",
+//   },
+//   {
+//     id: "p-cse-devops",
+//     title: "DevOps and Agile Methodology",
+//     branch: "CSE",
+//     subject: "DevOps",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/DevOps and Agile Methodology.pdf",
+//   },
+//   {
+//     id: "p-cse-dmgt",
+//     title: "Discrete Mathematics and Graph Theory",
+//     branch: "CSE",
+//     subject: "DMGT",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Discrete Mathematics and Graph Theory.pdf",
+//   },
+//   {
+//     id: "p-cse-eee",
+//     title: "Electrical and Electronics",
+//     branch: "CSE",
+//     subject: "EEE",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Electrical and Electronics .pdf",
+//   },
+//   {
+//     id: "p-cse-english",
+//     title: "English",
+//     branch: "CSE",
+//     subject: "English",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/English .pdf",
+//   },
+//   {
+//     id: "p-cse-ese",
+//     title: "Environmental Science and Engineering",
+//     branch: "CSE",
+//     subject: "ESE",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Environmental science and engineering.pdf",
+//   },
+//   {
+//     id: "p-cse-green-chem",
+//     title: "Green Chemistry",
+//     branch: "CSE",
+//     subject: "Chemistry",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Green chemistry .pdf",
+//   },
+//   {
+//     id: "p-cse-iwt",
+//     title: "Internet and Web Technology",
+//     branch: "CSE",
+//     subject: "IWT",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Internet and Web Technology.pdf",
+//   },
+//   {
+//     id: "p-cse-java",
+//     title: "Java Programming and Advance Java",
+//     branch: "CSE",
+//     subject: "Java",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Java Programming and Advance Java.pdf",
+//   },
+//   {
+//     id: "p-cse-ml",
+//     title: "Machine Learning",
+//     branch: "CSE",
+//     subject: "ML",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Machine learning.pdf",
+//   },
+//   {
+//     id: "p-cse-oops",
+//     title: "Object Oriented Programming (JAVA)",
+//     branch: "CSE",
+//     subject: "OOPS",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Object oriented programming JAVA.pdf",
+//   },
+//   {
+//     id: "p-cse-os",
+//     title: "Operating System",
+//     branch: "CSE",
+//     subject: "OS",
+//     year: "2024",
+//     downloads: 0,
+//     pdf: "./questionPDF/Operating system .pdf",
+//   },
+// ];
+
+
+      // Utility functions
+      const $ = (id) => document.getElementById(id);
+      function read(key, def) {
+        try {
+          const v = localStorage.getItem(key);
+          return v ? JSON.parse(v) : def;
+        } catch (e) {
+          console.error("Error reading localStorage:", e);
+          return def;
+        }
+      }
+      function write(key, val) {
+        localStorage.setItem(key, JSON.stringify(val));
+      }
+      function escapeHtml(s) {
+        return String(s || "").replace(
+          /[&<>"']/g,
+          (m) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[m])
+        );
+      }
+
+      // ── STEP 4: Initial Data Load from MongoDB ──────────────────────────────
+      // papers[] starts empty; filled by loadPapersFromDB() on init.
+      let papers = [];
+      let bookmarks = new Set(read(KEY_BOOKMARKS, []));
+      let analytics = read(KEY_ANALYTICS, { downloads: {} });
+
+      // Fetches from GET /papers and normalises MongoDB docs so existing
+      // renderGrid / filter / search / bookmark / preview code needs zero changes.
+      async function loadPapersFromDB() {
+        try {
+          const res = await fetch("http://localhost:8900/papers");
+          if (!res.ok) throw new Error("Server returned " + res.status);
+          const data = await res.json();
+
+          // Map _id → id and build pdf URL = /download/:id  (STEP 5)
+          papers = data.map((p) => ({
+            id: p._id,
+            title: p.title,
+            branch: p.branch,
+            subject: p.subject,
+            year: p.year,
+            downloads: p.downloads || 0,
+            pdf: "http://localhost:8900/download/" + p._id,
+          }));
+
+          renderChips();
+          renderGrid();
+          renderAnalyticsChart();
+        } catch (err) {
+          console.error("Could not load papers from server:", err);
+          showToast("Could not connect to server. Showing cached data.", "bg-red-500", 3000);
+          papers = read(KEY_PAPERS, []);
+          renderChips();
+          renderGrid();
+          renderAnalyticsChart();
+        }
+      }
+
+      // DOM refs
+      const grid = $("qb-grid");
+      const branchesEl = $("qb-branches");
+      const subjectsEl = $("qb-subjects");
+      const yearsEl = $("qb-years");
+      const searchInput = $("qb-search-input");
+      const suggestions = $("qb-suggestions");
+      const panel = $("qb-panel");
+      const panelContent = $("qb-panel-content");
+      const panelClose = $("qb-panel-close");
+      const openBookmarksEl = $("openBookmarks");
+      const qbYear = $("qb-year");
+      const searchClear = $("searchClear");
+      const emptyHint = $("emptyHint");
+      const openAIElem = $("openAI");
+      const themeToggle = $("themeToggle");
+      const themeIcon = $("themeIcon");
+
+      qbYear.textContent = new Date().getFullYear();
+
+      const state = { branch: null, subject: null, query: "" };
+
+
+      function distinct(list, key) {
+        return [...new Set(list.map((x) => x[key]).filter(Boolean))].sort();
+      }
+
+      /* Theme Toggle */
+      function applyTheme(theme) {
+        const body = document.body;
+        if (theme === "light") {
+          body.classList.remove("dark");
+          body.classList.add("light");
+          themeIcon.classList.replace("fa-moon", "fa-sun");
+          themeIcon.classList.replace("text-yellow-400", "text-gray-900");
+        } else {
+          body.classList.remove("light");
+          body.classList.add("dark");
+          themeIcon.classList.replace("fa-sun", "fa-moon");
+          themeIcon.classList.replace("text-gray-900", "text-yellow-400");
+        }
+        write(KEY_THEME, theme);
+      }
+
+      themeToggle.addEventListener("click", () => {
+        const currentTheme = document.body.classList.contains("dark")
+          ? "dark"
+          : "light";
+        const newTheme = currentTheme === "dark" ? "light" : "dark";
+        applyTheme(newTheme);
+      });
+
+      /* Chip and Filter Rendering */
+      function renderChips() {
+        const branches = distinct(papers, "branch");
+        const subjects = distinct(papers, "subject");
+        
+
+        function build(list, container, key) {
+          container.innerHTML = "";
+          list.forEach((item) => {
+            const b = document.createElement("button");
+            b.className = "chip";
+            b.textContent = item;
+            b.setAttribute("aria-pressed", String(state[key] === item));
+            b.addEventListener("click", () => {
+              state[key] = state[key] === item ? null : item;
+              renderChips();
+              renderGrid();
+            });
+            container.appendChild(b);
+          });
+        }
+        build(branches, branchesEl, "branch");
+        build(subjects, subjectsEl, "subject");
+        
+      }
+
+      function matches(p) {
+        if (state.branch && p.branch !== state.branch) return false;
+        if (state.subject && p.subject !== state.subject) return false;
+        
+        const q = (state.query || "").trim().toLowerCase();
+        if (q) {
+          const hay = (
+            p.title +
+            " " +
+            p.branch +
+            " " +
+            p.subject +
+            " " +
+            p.year
+          ).toLowerCase();
+          return hay.includes(q);
+        }
+        return true;
+      }
+
+      /* Main Grid Rendering */
+      function renderGrid() {
+        const list = papers.filter(matches);
+        grid.setAttribute("aria-busy", "true");
+        grid.innerHTML = "";
+
+        if (!list.length) {
+          emptyHint.hidden = false;
+          grid.setAttribute("aria-busy", "false");
+          return;
+        } else {
+          emptyHint.hidden = true;
+        }
+
+        list.forEach((p, idx) => {
+          const card = document.createElement("div");
+          card.className =
+            "qb-card rounded-xl p-5 shadow-lg flex flex-col justify-between space-y-4";
+          card.setAttribute("role", "listitem");
+          card.innerHTML = `
+            <div class="flex flex-col">
+              <div class="flex items-center space-x-2 text-sm font-semibold text-yellow-400 mb-2">
+                  <i class="fas fa-file-pdf"></i>
+                  <span>${escapeHtml(p.branch)}</span>
+              </div>
+              <h3 class="qb-title text-xl font-bold">${escapeHtml(p.title)}</h3>
+              <div class="qb-meta text-gray-500 text-sm mt-1">${escapeHtml(
+                p.subject
+              )}</div>
+              <div class="text-xs text-gray-600 dark:text-gray-500 mt-2">
+                  <i class="fas fa-download mr-1"></i> ${
+                    p.downloads || 0
+                  } Downloads
+              </div>
+            </div>
+            <div class="qb-actions flex space-x-3 pt-4" role="group" aria-label="Paper actions">
+              <button class="qb-btn download flex-1 px-4 py-2 rounded-full text-sm flex items-center justify-center gap-2" data-id="${
+                p.id
+              }" aria-label="Download ${escapeHtml(p.title)}">
+                  <i class="fas fa-download"></i> Download
+              </button>
+              <button class="qb-btn secondary preview flex-1 px-4 py-2 rounded-full text-sm flex items-center justify-center gap-2" data-id="${
+                p.id
+              }" aria-label="Preview ${escapeHtml(p.title)}">
+                  <i class="fas fa-eye"></i> Preview
+              </button>
+              <button class="qb-bookmark ${
+                bookmarks.has(p.id) ? "star" : ""
+              } w-10 h-10 rounded-full flex items-center justify-center text-xl hover:bg-yellow-400/20 transition-colors" data-id="${
+            p.id
+          }" aria-label="Bookmark ${escapeHtml(p.title)}">
+                  ${bookmarks.has(p.id) ? "★" : "☆"}
+              </button>
+            </div>
+          `;
+          grid.appendChild(card);
+          setTimeout(() => card.classList.add("enter"), 60 * idx);
+        });
+
+        grid.querySelectorAll(".download").forEach((b) =>
+          b.addEventListener("click", (e) => {
+            animateDownload(e.currentTarget);
+            handleDownload(e.currentTarget.dataset.id);
+          })
+        );
+        grid.querySelectorAll(".preview").forEach((b) =>
+          b.addEventListener("click", (e) => {
+            openPreview(e.currentTarget.dataset.id);
+          })
+        );
+        grid.querySelectorAll(".qb-bookmark").forEach((b) =>
+          b.addEventListener("click", (e) => {
+            toggleBookmark(e.currentTarget.dataset.id, e.currentTarget);
+            e.currentTarget.classList.toggle("star");
+            e.currentTarget.textContent = bookmarks.has(
+              e.currentTarget.dataset.id
+            )
+              ? "★"
+              : "☆";
+          })
+        );
+        grid.setAttribute("aria-busy", "false");
+      }
+
+      /* Download Handling – STEP 5 */
+      function handleDownload(id) {
+        const p = papers.find((x) => x.id === id);
+        if (!p) return;
+
+        // Update local analytics display
+        analytics.downloads[p.id] = (analytics.downloads[p.id] || 0) + 1;
+        write(KEY_ANALYTICS, analytics);
+        // Optimistically bump local counter for chart
+        p.downloads = (p.downloads || 0) + 1;
+
+        // ── STEP 5: Download URL is always /download/:id ─────────────────────
+        // The backend increments the downloads counter in MongoDB automatically.
+        if (p.pdf) {
+          const a = document.createElement("a");
+          a.href = p.pdf; // e.g. http://localhost:8900/download/<_id>
+          a.download = p.title.replace(/\s/g, "_") + ".pdf";
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        } else {
+          showToast("PDF link missing for this item.", "bg-red-500");
+        }
+        renderGrid();
+        renderAnalyticsChart();
+      }
+
+      // ── STEP 4/7: replaced by loadPapersFromDB() called in init()
+      // write(KEY_PAPERS, papers) is no longer needed as source of truth is MongoDB.
+
+      /* Download Animation */
+      function animateDownload(btn) {
+        btn.animate(
+          [
+            { transform: "scale(1)" },
+            { transform: "scale(.96)" },
+            { transform: "scale(1)" },
+          ],
+          { duration: 260, easing: "ease-out" }
+        );
+        const fp = document.createElement("div");
+        fp.className = "flying-paper";
+        fp.textContent = "📄 Downloaded!";
+        document.body.appendChild(fp);
+        setTimeout(() => fp.remove(), 1000);
+      }
+
+      /* Toast Message Utility (replaces alert/confirm for simple messages) */
+      function showToast(message, bgColor = "bg-yellow-400", duration = 2000) {
+        const toast = document.createElement("div");
+        toast.className = `fixed bottom-5 left-1/2 transform -translate-x-1/2 ${bgColor} text-gray-900 font-semibold px-5 py-3 rounded-xl shadow-2xl z-[1001] transition-opacity duration-300`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+          toast.style.opacity = "0";
+          setTimeout(() => toast.remove(), 300);
+        }, duration);
+      }
+
+      /* Bookmark Toggle */
+      function toggleBookmark(id) {
+        if (bookmarks.has(id)) {
+          bookmarks.delete(id);
+          showToast("Bookmark removed.", "bg-red-400");
+        } else {
+          bookmarks.add(id);
+          showToast("Paper bookmarked!", "bg-green-400");
+        }
+        write(KEY_BOOKMARKS, Array.from(bookmarks));
+        renderGrid();
+      }
+
+      /* Bookmarks Panel */
+      openBookmarksEl?.addEventListener("click", () => {
+        const list = Array.from(bookmarks)
+          .map((id) => papers.find((p) => p.id === id))
+          .filter(Boolean);
+
+        let listHtml = list.length
+          ? `<ul class="space-y-3 mt-4">${list
+              .map(
+                (p) => `
+              <li class="p-3 rounded-lg flex justify-between items-center bg-gray-900 dark:bg-gray-800 light:bg-gray-100 shadow-md">
+                  <div>
+                      <div class="font-semibold">${escapeHtml(p.title)}</div>
+                      <div class="text-xs text-gray-500">${escapeHtml(
+                        p.branch
+                      )} • ${escapeHtml(p.year)}</div>
+                  </div>
+                  <button data-id="${
+                    p.id
+                  }" class="qb-btn secondary remove ml-4 text-xs p-2 rounded-full">Remove</button>
+              </li>`
+              )
+              .join("")}</ul>`
+          : "<p class='mt-4 text-gray-500'>No papers bookmarked yet.</p>";
+
+        panelContent.innerHTML = `<h3 class="text-2xl font-bold text-yellow-400">Your Bookmarks</h3>${listHtml}`;
+        openPanel();
+
+        panelContent.querySelectorAll(".remove").forEach((b) =>
+          b.addEventListener("click", (e) => {
+            bookmarks.delete(e.currentTarget.dataset.id);
+            write(KEY_BOOKMARKS, Array.from(bookmarks));
+            showToast("Bookmark removed.", "bg-red-400");
+            // Re-render the panel content
+            openBookmarksEl.click();
+          })
+        );
+      });
+
+      /* Admin Panel */
+      $("openAdmin")?.addEventListener("click", () => {
+        const token = prompt('Admin token (demo): enter "admin"');
+        if (token !== "admin") {
+          showToast("Invalid token.", "bg-red-500");
+          return;
+        }
+        renderAdmin();
+      });
+
+      function renderAnalyticsChart() {
+        const area = document.getElementById("analyticsChartArea");
+        if (!area) return;
+
+        const rank = [...papers]
+          .sort((a, b) => (b.downloads || 0) - (a.downloads || 0))
+          .slice(0, 5); // Top 5
+
+        if (!rank.length || rank[0].downloads === 0) {
+          area.innerHTML =
+            '<p class="text-gray-500 pt-4">No download data available yet.</p>';
+          return;
+        }
+
+        const maxDownloads = rank[0].downloads;
+
+        const chartHtml = rank
+          .map((p) => {
+            const percentage = (p.downloads / maxDownloads) * 100;
+            return `
+                  <div class="bar-chart-row" title="${escapeHtml(p.title)}: ${
+              p.downloads
+            }">
+                      <div class="bar-label">${p.branch}: ${escapeHtml(
+              p.subject
+            )}</div>
+                      <div class="flex-grow h-full relative">
+                          <div class="bar" style="width: ${percentage}%;">
+                             ${p.downloads}
+                          </div>
+                      </div>
+                  </div>
+              `;
+          })
+          .join("");
+
+        area.innerHTML = `<div class="bar-container">${chartHtml}</div>`;
+      }
+
+      // ── STEP 6: Admin Panel with PDF upload form ────────────────────────────
+      function renderAdmin() {
+        panelContent.innerHTML = `
+          <h3 class="text-2xl font-bold text-yellow-400 mb-6">Admin Dashboard</h3>
+
+          <div class="space-y-6">
+              <section>
+                  <h4 class="text-xl font-semibold mb-3">Upload New Paper</h4>
+                  <p class="text-sm text-gray-500 mb-3">Fill in all fields and select a PDF to upload to MongoDB.</p>
+
+                  <div class="space-y-3">
+                    <input id="adminTitle"   type="text"   placeholder="Title (e.g. Data Structures)"
+                           class="w-full p-2 rounded bg-gray-800 dark:bg-gray-700 light:bg-gray-100 text-white text-sm border border-gray-700">
+                    <input id="adminBranch"  type="text"   placeholder="Branch (e.g. CSE)"
+                           class="w-full p-2 rounded bg-gray-800 dark:bg-gray-700 light:bg-gray-100 text-white text-sm border border-gray-700">
+                    <input id="adminSubject" type="text"   placeholder="Subject (e.g. DSA)"
+                           class="w-full p-2 rounded bg-gray-800 dark:bg-gray-700 light:bg-gray-100 text-white text-sm border border-gray-700">
+                    <input id="adminYear"    type="text"   placeholder="Year (e.g. 2024)"
+                           class="w-full p-2 rounded bg-gray-800 dark:bg-gray-700 light:bg-gray-100 text-white text-sm border border-gray-700">
+                    <label class="block text-sm text-gray-400 mt-1">PDF File
+                      <input id="adminPDF" type="file" accept="application/pdf"
+                             class="w-full text-sm p-2 rounded bg-gray-800 dark:bg-gray-700 light:bg-gray-100 mt-1">
+                    </label>
+                    <p id="uploadStatus" class="text-sm mt-1"></p>
+                    <button id="doUpload" class="qb-btn w-full py-2 rounded-lg mt-2">Upload to MongoDB</button>
+                  </div>
+              </section>
+
+              <section class="mt-8">
+                  <h4 class="text-xl font-semibold mb-3">Top Download Analytics</h4>
+                  <div id="analyticsChartArea" class="h-64">
+                      <!-- Chart rendered here -->
+                  </div>
+              </section>
+          </div>
+        `;
+        openPanel();
+        renderAnalyticsChart();
+
+        // ── STEP 6: wire up the upload button ──────────────────────────────
+        document.getElementById("doUpload")?.addEventListener("click", async () => {
+          const title   = document.getElementById("adminTitle").value.trim();
+          const branch  = document.getElementById("adminBranch").value.trim();
+          const subject = document.getElementById("adminSubject").value.trim();
+          const year    = document.getElementById("adminYear").value.trim();
+          const pdfFile = document.getElementById("adminPDF").files[0];
+          const statusEl = document.getElementById("uploadStatus");
+
+          if (!title || !pdfFile) {
+            statusEl.style.color = "#f87171";
+            statusEl.textContent = "Title and PDF file are required.";
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append("pdf",     pdfFile);
+          formData.append("title",   title);
+          formData.append("branch",  branch  || "N/A");
+          formData.append("subject", subject || "N/A");
+          formData.append("year",    year    || "N/A");
+
+          statusEl.style.color = "#fbbf24";
+          statusEl.textContent = "Uploading…";
+          document.getElementById("doUpload").disabled = true;
+
+          try {
+            const res  = await fetch("http://localhost:8900/upload", { method: "POST", body: formData });
+            const text = await res.text();
+
+            if (text === "PDF Uploaded") {
+              statusEl.style.color = "#4ade80";
+              statusEl.textContent = "✅ Uploaded successfully!";
+              showToast("Paper uploaded!", "bg-green-500");
+
+              // ── STEP 7: refresh paper list automatically ──────────────────
+              await loadPapersFromDB();
+            } else {
+              statusEl.style.color = "#f87171";
+              statusEl.textContent = "Upload failed: " + text;
+            }
+          } catch (err) {
+            statusEl.style.color = "#f87171";
+            statusEl.textContent = "Network error: " + err.message;
+          }
+          document.getElementById("doUpload").disabled = false;
+        });
+      }
+
+      // handleImport and parseCSV removed – replaced by the PDF upload form in renderAdmin() (STEP 6)
+
+      /* PDF.js Viewer Integration */
+      async function renderPdfToContainer(url, containerEl) {
+        if (typeof pdfjsLib === "undefined") {
+          containerEl.innerHTML =
+            '<div class="text-red-500">Error: PDF.js library not loaded.</div>';
+          return;
+        }
+
+        containerEl.innerHTML =
+          '<div class="pdf-loading text-center py-8 text-yellow-400"><i class="fas fa-spinner fa-spin mr-2"></i> Loading PDF Preview...</div>';
+
+        try {
+          const loadingTask = pdfjsLib.getDocument({ url, cMapUrl: null });
+          const pdf = await loadingTask.promise;
+
+          containerEl.innerHTML = "";
+          const viewer = document.createElement("div");
+          viewer.className =
+            "grid grid-cols-1 md:grid-cols-4 gap-3 bg-gray-900 dark:bg-gray-800 light:bg-gray-100 p-3 rounded-lg";
+
+          const mainCol = document.createElement("div");
+          mainCol.className = "md:col-span-3 min-h-[320px]";
+          const sideCol = document.createElement("div");
+          sideCol.className =
+            "md:col-span-1 overflow-y-auto max-h-[360px] p-2 space-y-2";
+
+          viewer.appendChild(mainCol);
+          viewer.appendChild(sideCol);
+          containerEl.appendChild(viewer);
+
+          const canvas = document.createElement("canvas");
+          canvas.className = "w-full h-auto block";
+          mainCol.appendChild(canvas);
+
+          const ctx = canvas.getContext("2d");
+          let currentPage = 1;
+
+          async function renderPage(pageNum) {
+            currentPage = pageNum;
+            const page = await pdf.getPage(pageNum);
+            const viewport = page.getViewport({ scale: 1.5 });
+            canvas.width = Math.floor(viewport.width);
+            canvas.height = Math.floor(viewport.height);
+
+            const renderContext = {
+              canvasContext: ctx,
+              viewport,
+            };
+            await page.render(renderContext).promise;
+
+            // Update active thumbnail
+            sideCol.querySelectorAll(".thumb-wrap").forEach((el) => {
+              el.classList.remove(
+                "border-yellow-400",
+                "ring-2",
+                "ring-yellow-400"
+              );
+            });
+            document
+              .querySelector(`#thumb-${pageNum}`)
+              ?.classList.add("border-yellow-400", "ring-2", "ring-yellow-400");
+          }
+
+          const total = Math.min(pdf.numPages, 10);
+          for (let i = 1; i <= total; i++) {
+            const thumbWrap = document.createElement("div");
+            thumbWrap.id = `thumb-${i}`;
+            thumbWrap.className =
+              "thumb-wrap flex items-center p-2 rounded-lg cursor-pointer transition-all border border-transparent";
+
+            const statusText = i === 1 ? "Open first page" : "Page " + i;
+            thumbWrap.innerHTML = `
+              <div class="w-12 h-16 rounded-sm bg-white border border-gray-300 flex items-center justify-center text-xs text-gray-500 mr-2 shadow-sm">
+                  ${i}
+              </div>
+              <div class="text-sm font-medium">${statusText}</div>
+            `;
+            thumbWrap.addEventListener("click", () => renderPage(i));
+            sideCol.appendChild(thumbWrap);
+          }
+
+          await renderPage(1);
+        } catch (err) {
+          containerEl.innerHTML = `<div class="text-red-500 p-4 bg-red-100 dark:bg-red-900 light:bg-red-100 rounded-lg">Preview failed: ${escapeHtml(
+            String(err.message || err)
+          )}</div>`;
+          console.error("PDF render error", err);
+        }
+      }
+
+      /* Open Preview Panel */
+      function openPreview(id) {
+        const p = papers.find((x) => x.id === id);
+        if (!p) return;
+        const hasPdf = !!p.pdf;
+
+        panelContent.innerHTML = `
+          <h3 class="text-2xl font-bold text-yellow-400">${escapeHtml(
+            p.title
+          )}</h3>
+          <p class="text-sm text-gray-500 mb-4">${escapeHtml(
+            p.branch
+          )} • ${escapeHtml(p.subject)} • ${escapeHtml(p.year)}</p>
+
+          <div id="pdfViewerArea" class="my-4"></div>
+
+          <div class="flex gap-3 justify-end pt-4 border-t border-gray-800 dark:border-gray-800 light:border-gray-200">
+            <button class="qb-btn" id="panelDownload">
+              <i class="fas fa-download mr-2"></i> Download
+            </button>
+            <button class="qb-btn secondary" id="panelCloseBtn">
+              <i class="fas fa-times mr-2"></i> Close
+            </button>
+          </div>
+        `;
+        openPanel();
+
+        document
+          .getElementById("panelDownload")
+          ?.addEventListener("click", () => {
+            handleDownload(p.id);
+            closePanel();
+          });
+        document
+          .getElementById("panelCloseBtn")
+          ?.addEventListener("click", closePanel);
+
+        const viewerArea = document.getElementById("pdfViewerArea");
+        if (hasPdf) {
+          renderPdfToContainer(p.pdf, viewerArea);
+        } else {
+          viewerArea.innerHTML = `<div class="p-8 border border-dashed border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg text-center text-gray-500">No PDF attached for preview.</div>`;
+        }
+      }
+
+      /* AI Assistant Panel */
+      openAIElem?.addEventListener("click", openAIPanel);
+
+      function openAIPanel() {
+        panelContent.innerHTML = `
+              <h3 class="text-2xl font-bold text-yellow-400 mb-4">
+                  <i class="fas fa-magic mr-2"></i> AI Assistant
+              </h3>
+              <p class="text-sm text-gray-500 mb-4">Ask about subjects, syllabus, or common exam topics.</p>
+
+              <div id="aiChatHistory" class="h-64 overflow-y-auto p-3 rounded-lg border border-gray-800 dark:border-gray-700 light:border-gray-300 mb-4 space-y-3">
+                  <div class="ai-chat-bubble text-gray-500 dark:text-gray-500 light:text-gray-600">
+                      <i class="fas fa-robot mr-2 text-yellow-400"></i>
+                      Hello! I can help you with quick summaries and insights. Try asking: "What are the key topics in Data Structures?"
+                  </div>
+              </div>
+
+              <form id="aiQueryForm" class="flex gap-2">
+                  <input id="aiQueryInput" type="text" placeholder="e.g., Summarize COA syllabus" required
+                         class="flex-grow p-3 rounded-full bg-gray-900 text-white dark:bg-gray-800 dark:text-white light:bg-white light:text-gray-900 border border-gray-700 light:border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                  <button type="submit" id="aiSubmitBtn" class="qb-btn p-3 rounded-full w-12 h-12 flex items-center justify-center">
+                      <i class="fas fa-paper-plane"></i>
+                  </button>
+              </form>
+          `;
+        openPanel();
+        document
+          .getElementById("aiQueryForm")
+          ?.addEventListener("submit", handleAIChatSubmit);
+      }
+
+      async function handleAIChatSubmit(event) {
+        event.preventDefault();
+        const inputEl = document.getElementById("aiQueryInput");
+        const query = inputEl.value.trim();
+        if (!query) return;
+
+        const chatHistoryEl = document.getElementById("aiChatHistory");
+        const submitBtn = document.getElementById("aiSubmitBtn");
+
+        // Add user message to history
+        chatHistoryEl.innerHTML += `<div class="p-3 bg-yellow-400 text-gray-900 rounded-lg rounded-br-none text-right">${escapeHtml(
+          query
+        )}</div>`;
+        chatHistoryEl.scrollTop = chatHistoryEl.scrollHeight;
+
+        // Show loading indicator
+        const loadingEl = document.createElement("div");
+        loadingEl.className = "ai-loading";
+        loadingEl.innerHTML =
+          '<i class="fas fa-spinner fa-spin mr-2"></i> Thinking...';
+        chatHistoryEl.appendChild(loadingEl);
+        chatHistoryEl.scrollTop = chatHistoryEl.scrollHeight;
+
+        inputEl.disabled = true;
+        submitBtn.disabled = true;
+
+        try {
+          await handleAIChat(query, chatHistoryEl);
+        } catch (error) {
+          console.error("AI Chat Error:", error);
+          loadingEl.innerHTML = `<div class="text-red-500">Error: Could not connect to AI. Please try again.</div>`;
+        } finally {
+          loadingEl.remove();
+          inputEl.value = "";
+          inputEl.disabled = false;
+          submitBtn.disabled = false;
+          inputEl.focus();
+        }
+      }
+
+      async function handleAIChat(query, chatHistoryEl) {
+        const systemPrompt =
+          "You are CGU-beeZ AI Assistant, an expert in engineering curriculum and exam patterns. Provide relevant, concise, and helpful information about the requested subject, branch, or year in an engaging tone. Focus on summarizing key topics, exam patterns, or common difficulties. Always ensure your response is based on current, grounded information, and cite your sources if provided.";
+        const apiKey = ""; // Canvas environment handles this
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+
+        const payload = {
+          contents: [{ parts: [{ text: query }] }],
+          tools: [{ google_search: {} }],
+          systemInstruction: {
+            parts: [{ text: systemPrompt }],
+          },
+        };
+
+        let responseData;
+        let retries = 0;
+        const maxRetries = 3;
+
+        while (retries < maxRetries) {
+          try {
+            const response = await fetch(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+            });
+
+            if (!response.ok) {
+              throw new Error(`API returned status ${response.status}`);
+            }
+
+            responseData = await response.json();
+            break; // Success! Exit loop
+          } catch (error) {
+            retries++;
+            if (retries >= maxRetries) {
+              throw error;
+            }
+            const delay = Math.pow(2, retries) * 1000;
+            await new Promise((resolve) => setTimeout(resolve, delay));
+          }
+        }
+
+        const candidate = responseData.candidates?.[0];
+        let aiText = "Sorry, I couldn't process that request.";
+        let sourcesHtml = "";
+
+        if (candidate && candidate.content?.parts?.[0]?.text) {
+          aiText = candidate.content.parts[0].text;
+
+          const groundingMetadata = candidate.groundingMetadata;
+          if (groundingMetadata && groundingMetadata.groundingAttributions) {
+            const sources = groundingMetadata.groundingAttributions
+              .map((attribution) => ({
+                uri: attribution.web?.uri,
+                title: attribution.web?.title,
+              }))
+              .filter((source) => source.uri && source.title)
+              .slice(0, 3); // Limit to 3 sources
+
+            if (sources.length > 0) {
+              sourcesHtml =
+                '<div class="text-xs mt-3 pt-3 border-t border-gray-700 dark:border-gray-700 light:border-gray-200">';
+              sourcesHtml +=
+                '<p class="font-semibold mb-1 text-gray-400">Sources:</p>';
+              sourcesHtml += sources
+                .map(
+                  (s) =>
+                    `<a href="${escapeHtml(
+                      s.uri
+                    )}" target="_blank" class="block text-yellow-400 hover:underline truncate" title="${escapeHtml(
+                      s.title
+                    )}">${escapeHtml(s.title)}</a>`
+                )
+                .join("");
+              sourcesHtml += "</div>";
+            }
+          }
+        }
+
+        // Add AI message to history
+        chatHistoryEl.innerHTML += `
+              <div class="ai-chat-bubble rounded-tl-none">
+                  <i class="fas fa-robot mr-2 text-yellow-400"></i>
+                  ${aiText}
+                  ${sourcesHtml}
+              </div>
+          `;
+        chatHistoryEl.scrollTop = chatHistoryEl.scrollHeight;
+      }
+
+      /* Panel open/close */
+      function openPanel() {
+        panel.classList.add("open");
+        panel.setAttribute("aria-hidden", "false");
+      }
+      function closePanel() {
+        panel.classList.remove("open");
+        panel.setAttribute("aria-hidden", "true");
+        // Clear content to prevent memory leaks, especially with PDF viewer
+        panelContent.innerHTML = "";
+      }
+      panelClose.addEventListener("click", closePanel);
+
+      /* Search & suggestions */
+      searchInput?.addEventListener("input", (e) => {
+        state.query = e.target.value;
+        updateSuggestions(state.query);
+        renderGrid();
+        searchClear.hidden = !state.query;
+      });
+      searchClear?.addEventListener("click", () => {
+        searchInput.value = "";
+        state.query = "";
+        updateSuggestions("");
+        renderGrid();
+        searchClear.hidden = true;
+      });
+
+      function updateSuggestions(q) {
+        if (!q || q.trim().length < 1) {
+          hideSuggestions();
+          return;
+        }
+        const low = q.toLowerCase();
+        const set = new Set();
+        papers.forEach((p) =>
+          [p.title, p.subject, p.branch, p.year].forEach((t) => {
+            if (t && t.toLowerCase().includes(low)) set.add(t);
+          })
+        );
+        const list = Array.from(set).slice(0, 8);
+
+        suggestions.innerHTML = list
+          .map(
+            (t, i) =>
+              `<li role="option" data-value="${escapeHtml(
+                t
+              )}" class="p-3 cursor-pointer hover:bg-gray-700 dark:hover:bg-gray-700 light:hover:bg-gray-100 border-b border-gray-800 dark:border-gray-700 light:border-gray-200 last:border-b-0 ${
+                i === 0 ? 'aria-selected="true"' : ""
+              }">
+                <strong>${escapeHtml(t)}</strong>
+              </li>`
+          )
+          .join("");
+
+        suggestions.style.display = list.length ? "block" : "none";
+        suggestions.setAttribute("aria-hidden", list.length ? "false" : "true");
+
+        suggestions.querySelectorAll("li").forEach((li) =>
+          li.addEventListener("click", (e) => {
+            searchInput.value = e.currentTarget.dataset.value;
+            state.query = searchInput.value;
+            hideSuggestions();
+            renderGrid();
+          })
+        );
+      }
+      function hideSuggestions() {
+        suggestions.style.display = "none";
+        suggestions.innerHTML = "";
+        suggestions.setAttribute("aria-hidden", "true");
+      }
+
+      /* clear filters */
+      $("qb-clear")?.addEventListener("click", () => {
+       state.branch = state.subject = null;
+        renderChips();
+        renderGrid();
+      });
+
+      /* auth demo */
+      $("authBtn")?.addEventListener("click", () => {
+        const u = read(KEY_USER, null);
+        if (u) {
+          // Custom confirm dialog logic needed if not using prompt
+          if (window.confirm("Sign out?")) {
+            localStorage.removeItem(KEY_USER);
+            showToast("Signed out (demo).", "bg-gray-500");
+            $("authBtn").textContent = "Login";
+          }
+          return;
+        }
+        const name = prompt("Enter your name (demo login)");
+        if (name) {
+          write(KEY_USER, { name });
+          showToast(`Welcome, ${name}!`, "bg-green-500");
+          $("authBtn").textContent = "Sign out";
+        }
+      });
+
+      /* init */
+      function init() {
+        // Load and apply theme
+        const savedTheme = read(KEY_THEME, "dark");
+        applyTheme(savedTheme);
+
+        // ── STEP 4: load papers from MongoDB instead of SAMPLE array ────────
+        loadPapersFromDB();   // async; renders chips + grid when data arrives
+        if (read(KEY_USER, null)) $("authBtn").textContent = "Sign out";
+
+        // Close panel/suggestions on outside click
+        document.addEventListener("click", (e) => {
+          if (!e.target.closest(".qb-search")) hideSuggestions();
+          if (
+            !e.target.closest("#qb-panel") &&
+            !e.target.closest("#openAdmin") &&
+            !e.target.closest("#openBookmarks") &&
+            !e.target.closest("#openAI")
+          ) {
+            // Only close if the panel is open
+            if (panel.classList.contains("open")) closePanel();
+          }
+        });
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            hideSuggestions();
+            closePanel();
+          }
+        });
+      }
+      init();
+    </script>
+  </body>
+</html>
+
+
+
+<!-- document.getElementById("uploadForm").addEventListener("submit", async (e)=>{
+
+  e.preventDefault()
+
+  const file = document.getElementById("pdf").files[0]
+
+  const formData = new FormData()
+  formData.append("pdf", file)
+
+  const res = await fetch("http://localhost:8900/upload",{
+    method:"POST",
+    body:formData
+  })
+
+  const data = await res.text()
+  console.log(data)
+
+})
+ -->

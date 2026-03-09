@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up | CGU-BeeZ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+  <div class="auth-container">
+    <div class="auth-box">
+
+      <h2>Create Account ✨</h2>
+      <p>Join CGU-BeeZ today</p>
+       <p id="msg"></p>
+      <form id="signupForm">
+
+        <div class="input-group">
+          <input type="text" id="name" required>
+          <label>Full Name</label>
+        </div>
+
+        <div class="input-group">
+          <input type="email" id="email" required>
+          <label>Email Address</label>
+        </div>
+
+        <div class="input-group password-group">
+          <input  type="password" id="signupPassword" required>
+          <label>Password</label>
+          <span class="toggle-password" onclick="togglePassword('signupPassword')">👁</span>
+        </div>
+
+        <div class="input-group password-group">
+          <input type="password" id="confirmPassword" required>
+          <label>Confirm Password</label>
+          <span class="toggle-password" onclick="togglePassword('confirmPassword')">👁</span>
+        </div>
+
+        <button type="submit" class="auth-btn" id="submit">Create Account</button>
+
+      </form>
+
+      <div class="switch-link">
+        Already have an account? <a href="login.html">Login</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login | CGU-BeeZ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+
+  <div class="auth-container">
+    <div class="auth-box">
+
+      <h2>Welcome Back 👋</h2>
+      <p id="login-status"></p>
+      <p>Login to access CGU-BeeZ</p>
+      <form id="loginForm">
+
+        <div class="input-group">
+          <input type="email" id="email" >
+          <label>Email Address</label>
+        </div>
+
+        <div class="input-group password-group">
+          <input type="password" id="loginPassword" required>
+          <label>Password</label>
+          <span class="toggle-password" onclick="togglePassword('loginPassword')">👁</span>
+        </div>
+
+        <button type="submit" class="auth-btn">Login</button>
+
+      </form>
+
+      <div class="switch-link">
+        Don’t have an account? <a href="signup.html">Sign Up</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="auth.js" defer></script>
+</body>
+</html>

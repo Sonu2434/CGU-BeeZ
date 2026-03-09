@@ -1,0 +1,34 @@
+id,title,branch,subject,year,pdfFilename
+p-ee-2025,Electrical and Electronics,CSE,Electrical and Electronics,2025,Electrical_and_Electronics.pdf
+p-ds-2025,Data Structures,CSE,Data Structures,2025,Data_Structures.pdf
+p-ml-2025,Machine Learning,CSE,Machine Learning,2025,Machine_Learning.pdf
+p-spm-2025,Software Project Management,CSE,SPM,2025,Software_Project_Management.pdf
+p-dmgt-2025,Discrete Mathematics and Graph Theory,CSE,DMGT,2025,Discrete_Mathematics_and_Graph_Theory.pdf
+p-st-2025,Software Testing,CSE,Software Testing,2025,Software_Testing.pdf
+p-ai-2025,Artificial Intelligence and Data Science,CSE,AI & DS,2025,AI_and_Data_Science.pdf
+p-cpp-2025,Programming in C++,CSE,C++,2025,Programming_in_CPP.pdf
+p-coa-2025,Computer Architecture and Organization,CSE,COA,2025,Computer_Architecture_and_Organization.pdf
+p-dccn-2025,DCCN,CSE,DCCN,2025,DCCN.pdf
+p-scld-2025,Switching Circuits and Logic Design,CSE,SCLD,2025,SCLD.pdf
+p-java-2025,Java Programming and Advance Java,CSE,Java,2025,Java_Programming.pdf
+p-bc-2025,Blockchain,CSE,Blockchain,2025,Blockchain.pdf
+p-am-2025,Applied Mathematics,CSE,Mathematics,2025,Applied_Mathematics.pdf
+p-devops-2025,DevOps and Agile Methodology,CSE,DevOps,2025,DevOps_and_Agile.pdf
+p-iwt-2025,Internet and Web Technology,CSE,IWT,2025,Internet_and_Web_Technology.pdf
+p-evs-2025,Environmental Science and Engineering,CSE,EVS,2025,Environmental_Science.pdf
+p-cv-2025,Computer Vision,CSE,Computer Vision,2025,Computer_Vision.pdf
+p-web-2025,Web Application,CSE,Web,2025,Web_Application.pdf
+p-python-2025,Python Programming,CSE,Python,2025,Python_Programming.pdf
+p-db-2025,Database Engineering,CSE,DBMS,2025,Database_engineering.pdf
+p-gc-2025,Green Chemistry,CSE,Chemistry,2025,Green_chemistry.pdf
+p-cd-2025,Compiler Design,CSE,Compiler Design,2025,Compiler_design.pdf
+p-oopj-2025,Object Oriented Programming JAVA,CSE,OOP Java,2025,Object_oriented_programming_JAVA.pdf
+p-os-2025,Operating System,CSE,Operating System,2025,Operating_system.pdf
+p-co-2025,Computer Organization,CSE,CO,2025,Computer_organization.pdf
+p-chem-2025,Chemistry,CSE,Chemistry,2025,Chemistry.pdf
+p-daa-2025,Design and Analysis of Algorithm,CSE,DAA,2025,Design_and_Analysis_of_Algorithm.pdf
+p-eng-2025,English,CSE,English,2025,English.pdf
+p-dvbd-2025,Data Visualization and Big Data Analysis,CSE,Big Data,2025,Data_visualization_and_Big_data_analysis.pdf
+p-bes-2025,Biology and Environmental Science,CSE,Biology,2025,Biology_and_environmental_science.pdf
+p-phy1-2025,Physics,CSE,Physics,2025,Physics_1.pdf
+p-cns-2025,Computer Networking and Security,CSE,CNS,2025,Computer_Networking_and_Security.pdf

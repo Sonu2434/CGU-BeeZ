@@ -1,0 +1,290 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #000;
+  color: white;
+  overflow-x: hidden;
+}
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 8%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  animation: slideDown 1s ease forwards;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #FFD700;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: white;
+  position: relative;
+  transition: 0.3s;
+}
+
+/* Underline animation */
+.nav-links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 0%;
+  height: 2px;
+  background: #FFD700;
+  transition: 0.4s;
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-links a:hover {
+  color: #FFD700;
+}
+
+.signup-btn {
+  background: #FFD700;
+  color: black !important;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 1.8rem;
+  cursor: pointer;
+  color: #FFD700;
+}
+
+/* ================= HERO ================= */
+
+.hero {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  text-align: center;
+}
+
+.hero-content {
+  z-index: 2;
+  animation: fadeIn 2s ease forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* CGU Animation */
+.hero-title {
+  font-size: 8rem;
+  font-weight: 900;
+  color: #FFD700;
+  letter-spacing: 10px;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px #FFD700; }
+  to { text-shadow: 0 0 30px #FFD700, 0 0 60px #FFD700; }
+}
+
+.hero-subtitle {
+  margin-top: 10px;
+  color: #ccc;
+}
+
+.explore-btn {
+  margin-top: 20px;
+  padding: 12px 30px;
+  border: none;
+  background: #FFD700;
+  color: black;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.explore-btn:hover {
+  transform: scale(1.1);
+}
+
+/* ================= SLIDER ================= */
+
+.slider {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.slides {
+  display: flex;
+  width: 400%;
+  height: 100%;
+  animation: slide 200s infinite;
+}
+
+.slides img {
+  width: 100%;
+  height: 100vh;
+  object-fit: cover;
+  opacity: 0.5;
+}
+
+@keyframes slide {
+  0% { transform: translateX(0%); }
+  25% { transform: translateX(-100%); }
+  50% { transform: translateX(-200%); }
+  75% { transform: translateX(-300%); }
+  100% { transform: translateX(0%); }
+}
+
+
+/* ================= RESPONSIVE ================= */
+
+@media(max-width: 768px) {
+  .nav-links {
+    position: absolute;
+    top: 70px;
+    right: -100%;
+    flex-direction: column;
+    background: #000;
+    width: 200px;
+    padding: 20px;
+    transition: 0.3s;
+  }
+
+  .nav-links.active {
+    right: 0;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .hero-title {
+    font-size: 4rem;
+  }
+
+  .explore-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+
+
+/* Papers Section */
+.paper-section {
+  padding: 40px 20px;
+}
+.paper-section h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.filters {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.filters select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+.paper-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 0 20px;
+}
+.paper-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+.paper-card h3 {
+  font-size: 1.1rem;
+}
+.paper-card p {
+  font-size: 0.9rem;
+  margin: 5px 0;
+}
+.paper-card a {
+  display: inline-block;
+  margin-top: 10px;
+  background: #2c3e50;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+}
+.paper-card a:hover {
+  background: #00d1b2;
+}
+
+
+/* signup page css--------- */
+
+.form-section {
+  max-width: 400px;
+  margin: 60px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+}
+.signup-form input {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.signup-form button {
+  background: #2c3e50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.signup-form button:hover {
+  background-color: #00d1b2;
+}

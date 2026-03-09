@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CGU-BeeZ | Home</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="logo">CGU-BeeZ</div>
+
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#explore">Explore</a></li>
+      <li><a href="login.html" id="Login-route">Login</a></li>
+      <li><a href="signup.html" class="signup-btn">Signup</a></li>
+    </ul>
+
+    <div class="menu-toggle">&#9776;</div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">CGU</h1>
+      <p class="hero-subtitle">C.V. Raman Global University Bhubaneswar,Odisha</p>
+      <button class="explore-btn" onclick="Checking_user()">
+  Explore Now
+</button>
+
+    </div>
+
+    <div class="slider">
+      <div class="slides">
+        <img src="./criket-ground.jpeg" alt="">
+        <img src="./sc-bhadra.jpeg" alt="">
+        <img src="./etc-image.jpg" alt="">
+        <img src="./ME-Department-Image.jpg" alt="">
+        <img src="./criket-ground.jpeg" alt="">
+        <img src="./sc-bhadra.jpeg" alt="">
+        <img src="./etc-image.jpg" alt="">
+        <img src="./ME-Department-Image.jpg" alt="">
+        <img src="./criket-ground.jpeg" alt="">
+        <img src="./sc-bhadra.jpeg" alt="">
+        <img src="./etc-image.jpg" alt="">
+        <img src="./ME-Department-Image.jpg" alt="">
+      </div>
+    </div>
+  </section>
+
+<script>
+  let status=localStorage.getItem("Checkuser")
+  if(status){
+    let sgn=document.querySelector(".signup-btn")
+    document.getElementById("Login-route").innerText=""
+    sgn.innerHTML="Hi, "+status
+    sgn.href="#"
+
+  }
+
+</script>
+  <script src="script.js"></script>
+</body>
+</html>
