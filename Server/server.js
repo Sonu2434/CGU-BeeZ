@@ -4,7 +4,7 @@ const multer = require("multer");
 const cors = require("cors");
 let app = express();
 
-app.use(cors({ origin: "https://cgu-beez-kdm9whxfp-webcreator.vercel.app" })); // FRONTEND
+app.use(cors({ origin: "https://cgu-beez.vercel.app/" })); // FRONTEND
 app.use(express.json());
 
 // ─── DB CONNECTION ────────────────────────────────────────────────────────────
