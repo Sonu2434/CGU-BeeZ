@@ -822,11 +822,11 @@ function handleDownload(id) {
   if (!p || !p.pdf) return;
 
   const link = document.createElement("a");
-  link.href = p.pdf;
-  link.target = "_blank";
+  a.href = p.pdf;
+  a.target = "_blank";
   document.body.appendChild(link);
-  link.click();
-  link.remove();
+  a.click();
+  a.remove();
 }
 
       // Previous download handler 
