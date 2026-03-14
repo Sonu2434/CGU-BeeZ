@@ -306,7 +306,7 @@ app.get("/download/:id", async (req, res) => {
 
     res.set({
       "Content-Type": "application/pdf",
-      "Content-Disposition": `attachment; filename="${file.originalName || file.title + ".pdf"}"`,
+      "Content-Disposition": "inline",
     });
     res.send(file.file);
   } catch (err) {
