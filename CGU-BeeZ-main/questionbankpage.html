@@ -287,7 +287,7 @@
     </div>
 
     <header class="fixed top-0 left-0 right-0 z-40 p-4 sm:p-6">
-      <div
+      <!-- <div
         class="flex justify-between items-center max-w-7xl mx-auto backdrop-blur-md bg-opacity-70 rounded-xl px-4 py-3 shadow-lg border border-opacity-10 dark:border-white/10 light:border-black/10"
       >
         <a
@@ -327,7 +327,92 @@
             <i id="themeIcon" class="fas fa-moon text-yellow-400"></i>
           </button>
         </div>
-      </div>
+      </div> -->
+      <div class="flex justify-between items-center max-w-7xl mx-auto backdrop-blur-md bg-opacity-70 rounded-xl px-4 py-3 shadow-lg border border-opacity-10 dark:border-white/10 light:border-black/10">
+  
+  <!-- Logo -->
+  <a class="text-xl font-extrabold tracking-wider text-white dark:text-gray-900 bg-yellow-400 px-3 py-1.5 rounded-lg transition-colors duration-300" href="#">
+    CGU-beeZ
+  </a>
+
+  <!-- Desktop Nav (visible on md and above) -->
+  <div class="hidden md:flex space-x-2 sm:space-x-4 items-center">
+    <button id="openAI" class="qb-btn secondary px-3 py-2 sm:px-4 rounded-full text-sm flex items-center gap-2">
+      <i class="fas fa-magic icon"></i> AI Assistant
+    </button>
+    <button id="openBookmarks" class="qb-btn secondary px-3 py-2 sm:px-4 rounded-full text-sm flex items-center gap-2">
+      <i class="fas fa-star icon"></i> Bookmarks
+    </button>
+    <button id="openAdmin" class="qb-btn secondary px-3 py-2 sm:px-4 rounded-full text-sm flex items-center gap-2">
+      Admin
+    </button>
+    <button id="themeToggle" class="w-10 h-10 rounded-full flex items-center justify-center border border-opacity-30 dark:border-white/30 light:border-black/30">
+      <i id="themeIcon" class="fas fa-moon text-yellow-400"></i>
+    </button>
+  </div>
+
+  <!-- Mobile Controls (visible below md) -->
+  <div class="flex md:hidden items-center gap-2">
+    <button id="themeToggle" class="w-10 h-10 rounded-full flex items-center justify-center border border-white/20">
+      <i id="themeIcon" class="fas fa-moon text-yellow-400"></i>
+    </button>
+    <!-- Hamburger Button -->
+    <button id="hamburgerBtn" aria-label="Toggle menu"
+      style="display:flex; flex-direction:column; justify-content:center; align-items:center; gap:5px; width:40px; height:40px; background:transparent; border:1px solid rgba(255,219,88,0.4); border-radius:10px; cursor:pointer;">
+      <span style="display:block; width:20px; height:2px; background:#ffdb58; border-radius:2px; transition:all 0.3s ease; transform-origin:center;"></span>
+      <span style="display:block; width:20px; height:2px; background:#ffdb58; border-radius:2px; transition:all 0.3s ease;"></span>
+      <span style="display:block; width:20px; height:2px; background:#ffdb58; border-radius:2px; transition:all 0.3s ease; transform-origin:center;"></span>
+    </button>
+  </div>
+
+</div>
+
+<!-- Mobile Dropdown Menu -->
+<div id="mobileMenu" style="display:none; position:fixed; top:70px; left:12px; right:12px; z-index:999; background:#111; border:1px solid rgba(255,219,88,0.15); border-radius:16px; padding:10px; box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+  <button onclick="document.getElementById('mobileMenu').style.display='none'; openAIPanel();"
+    style="width:100%; display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; font-size:0.9rem; font-weight:600; cursor:pointer; background:transparent; border:none; color:#ccc;">
+    <i class="fas fa-magic" style="color:#ffdb58; width:18px; text-align:center;"></i> AI Assistant
+  </button>
+  <button onclick="document.getElementById('mobileMenu').style.display='none'; renderBookmarksPanel();"
+    style="width:100%; display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; font-size:0.9rem; font-weight:600; cursor:pointer; background:transparent; border:none; color:#ccc;">
+    <i class="fas fa-star" style="color:#ffdb58; width:18px; text-align:center;"></i> Bookmarks
+  </button>
+  <button onclick="document.getElementById('mobileMenu').style.display='none'; (() => { const t=prompt('Admin Password (only for admin)'); if(t!=='cgu-beez@9955910844#'){showToast('Invalid Password.','bg-red-500');return;} renderAdmin(); })()"
+    style="width:100%; display:flex; align-items:center; gap:10px; padding:12px 14px; border-radius:10px; font-size:0.9rem; font-weight:600; cursor:pointer; background:transparent; border:none; color:#ccc;">
+    <i class="fas fa-shield-alt" style="color:#ffdb58; width:18px; text-align:center;"></i> Admin
+  </button>
+</div>
+
+<script>
+  const _hBtn = document.getElementById('hamburgerBtn');
+  const _mMenu = document.getElementById('mobileMenu');
+  const _bars = _hBtn.querySelectorAll('span');
+
+  _hBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = _mMenu.style.display === 'block';
+    _mMenu.style.display = isOpen ? 'none' : 'block';
+    // Animate bars to X
+    if (!isOpen) {
+      _bars[0].style.transform = 'translateY(7px) rotate(45deg)';
+      _bars[1].style.opacity = '0';
+      _bars[2].style.transform = 'translateY(-7px) rotate(-45deg)';
+    } else {
+      _bars[0].style.transform = '';
+      _bars[1].style.opacity = '';
+      _bars[2].style.transform = '';
+    }
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('#mobileMenu') && !e.target.closest('#hamburgerBtn')) {
+      _mMenu.style.display = 'none';
+      _bars[0].style.transform = '';
+      _bars[1].style.opacity = '';
+      _bars[2].style.transform = '';
+    }
+  });
+</script>
     </header>
 
     <!-- Mobile Nav Menu -->
@@ -422,7 +507,7 @@
     <!-- SLIDE PANEL (Bookmarks, Admin, AI) -->
     <aside
       id="qb-panel"
-      class="qb-panel fixed right-0 top-0 h-full w-full sm:w-[420px] shadow-2xl pt-20 px-6 pb-6 overflow-y-auto"
+      class="qb-panel fixed right-0 top-0 h-full w-full sm:w-[480px] shadow-2xl pt-16 sm:pt-20 px-4 sm:px-6 pb-6 overflow-y-auto"
       aria-hidden="true"
       role="dialog"
     >
@@ -469,267 +554,6 @@
       const KEY_ANALYTICS = "qb_analytics_v2";
       const KEY_USER = "qb_user_v2";
       const KEY_THEME = "qb_theme";
-
-      // ── STEP 4: No more SAMPLE array. Papers come from MongoDB via /papers ──
-      // The SAMPLE constant is intentionally removed.
-      // Papers are fetched once on page load inside loadPapersFromDB().
-
-      // PLACEHOLDER so nothing below breaks before fetch completes:
-//       const SAMPLE = [ // kept only as empty fallback – DB is the source of truth
-//   {
-//     id: "p-cse-physics-1",
-//     title: "Physics",
-//     branch: "CSE",
-//     subject: "Physics",
-//     year: "2025",
-//     downloads: 0,
-//     pdf: "http://localhost:8900/download/69ad21ff00c923e93ce7d1ff",
-//   },
-//   {
-//     id: "p-cse-physics-2",
-//     title: "Physics (Set 2)",
-//     branch: "CSE",
-//     subject: "Physics",
-//     year: "2025",
-//     downloads: 0,
-//     pdf: "./questionPDF/Physics (1).pdf",
-//   },
-//   {
-//     id: "p-cse-applied-maths",
-//     title: "Applied Mathematics",
-//     branch: "CSE",
-//     subject: "Mathematics",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Applied Mathematics.pdf",
-//   },
-//   {
-//     id: "p-cse-ai-ds",
-//     title: "Artificial Intelligence and Data Science",
-//     branch: "CSE",
-//     subject: "AI & DS",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Artificial intelligence and Data Science.pdf",
-//   },
-//   {
-//     id: "p-cse-biology",
-//     title: "Biology and Environmental Science",
-//     branch: "CSE",
-//     subject: "Biology",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Biology and environmental science .pdf",
-//   },
-//   {
-//     id: "p-cse-blockchain",
-//     title: "Blockchain",
-//     branch: "CSE",
-//     subject: "Blockchain",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/BlockChain.pdf",
-//   },
-//   {
-//     id: "p-cse-chemistry",
-//     title: "Chemistry",
-//     branch: "CSE",
-//     subject: "Chemistry",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Chemistry .pdf",
-//   },
-//   {
-//     id: "p-cse-compiler-design",
-//     title: "Compiler Design",
-//     branch: "CSE",
-//     subject: "Compiler Design",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Compiler design .pdf",
-//   },
-//   {
-//     id: "p-cse-cao",
-//     title: "Computer Architecture and Organization",
-//     branch: "CSE",
-//     subject: "CAO",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Computer Architecture and Organization.pdf",
-//   },
-//   {
-//     id: "p-cse-cns",
-//     title: "Computer Networking and Security",
-//     branch: "CSE",
-//     subject: "CNS",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Computer Networking and Security.pdf",
-//   },
-//   {
-//     id: "p-cse-co",
-//     title: "Computer Organization",
-//     branch: "CSE",
-//     subject: "CO",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Computer organization .pdf",
-//   },
-//   {
-//     id: "p-cse-cv",
-//     title: "Computer Vision",
-//     branch: "CSE",
-//     subject: "CV",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Computer Vision.pdf",
-//   },
-//   {
-//     id: "p-cse-dsa",
-//     title: "Data Structures",
-//     branch: "CSE",
-//     subject: "DSA",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Data Structures.pdf",
-//   },
-//   {
-//     id: "p-cse-bigdata",
-//     title: "Data Visualization and Big Data Analysis",
-//     branch: "CSE",
-//     subject: "Big Data",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Data visualization and Big data analysis .pdf",
-//   },
-//   {
-//     id: "p-cse-db",
-//     title: "Database Engineering",
-//     branch: "CSE",
-//     subject: "DBMS",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Database engineering .pdf",
-//   },
-//   {
-//     id: "p-cse-dccn",
-//     title: "DCCN",
-//     branch: "CSE",
-//     subject: "DCCN",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/DCCN.pdf",
-//   },
-//   {
-//     id: "p-cse-daa",
-//     title: "Design and Analysis of Algorithm",
-//     branch: "CSE",
-//     subject: "DAA",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Design and Analysis of Algorithm .pdf",
-//   },
-//   {
-//     id: "p-cse-devops",
-//     title: "DevOps and Agile Methodology",
-//     branch: "CSE",
-//     subject: "DevOps",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/DevOps and Agile Methodology.pdf",
-//   },
-//   {
-//     id: "p-cse-dmgt",
-//     title: "Discrete Mathematics and Graph Theory",
-//     branch: "CSE",
-//     subject: "DMGT",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Discrete Mathematics and Graph Theory.pdf",
-//   },
-//   {
-//     id: "p-cse-eee",
-//     title: "Electrical and Electronics",
-//     branch: "CSE",
-//     subject: "EEE",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Electrical and Electronics .pdf",
-//   },
-//   {
-//     id: "p-cse-english",
-//     title: "English",
-//     branch: "CSE",
-//     subject: "English",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/English .pdf",
-//   },
-//   {
-//     id: "p-cse-ese",
-//     title: "Environmental Science and Engineering",
-//     branch: "CSE",
-//     subject: "ESE",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Environmental science and engineering.pdf",
-//   },
-//   {
-//     id: "p-cse-green-chem",
-//     title: "Green Chemistry",
-//     branch: "CSE",
-//     subject: "Chemistry",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Green chemistry .pdf",
-//   },
-//   {
-//     id: "p-cse-iwt",
-//     title: "Internet and Web Technology",
-//     branch: "CSE",
-//     subject: "IWT",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Internet and Web Technology.pdf",
-//   },
-//   {
-//     id: "p-cse-java",
-//     title: "Java Programming and Advance Java",
-//     branch: "CSE",
-//     subject: "Java",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Java Programming and Advance Java.pdf",
-//   },
-//   {
-//     id: "p-cse-ml",
-//     title: "Machine Learning",
-//     branch: "CSE",
-//     subject: "ML",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Machine learning.pdf",
-//   },
-//   {
-//     id: "p-cse-oops",
-//     title: "Object Oriented Programming (JAVA)",
-//     branch: "CSE",
-//     subject: "OOPS",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Object oriented programming JAVA.pdf",
-//   },
-//   {
-//     id: "p-cse-os",
-//     title: "Operating System",
-//     branch: "CSE",
-//     subject: "OS",
-//     year: "2024",
-//     downloads: 0,
-//     pdf: "./questionPDF/Operating system .pdf",
-//   },
-// ];
-
 
       // Utility functions
       const $ = (id) => document.getElementById(id);
@@ -946,7 +770,9 @@
               } w-10 h-10 rounded-full flex items-center justify-center text-xl hover:bg-yellow-400/20 transition-colors" data-id="${
             p.id
           }" aria-label="Bookmark ${escapeHtml(p.title)}">
-                  ${bookmarks.has(p.id) ? "★" : "☆"}
+                  ${bookmarks.has(p.id)
+                    ? `<i class="fas fa-star text-yellow-400"></i>`
+                    : `<i class="far fa-star text-gray-400"></i>`}
               </button>
             </div>
           `;
@@ -967,13 +793,23 @@
         );
         grid.querySelectorAll(".qb-bookmark").forEach((b) =>
           b.addEventListener("click", (e) => {
-            toggleBookmark(e.currentTarget.dataset.id, e.currentTarget);
-            e.currentTarget.classList.toggle("star");
-            e.currentTarget.textContent = bookmarks.has(
-              e.currentTarget.dataset.id
-            )
-              ? "★"
-              : "☆";
+            const btn = e.currentTarget;
+            const id  = btn.dataset.id;
+            // Toggle in the Set and persist
+            if (bookmarks.has(id)) {
+              bookmarks.delete(id);
+              showToast("Bookmark removed.", "bg-red-400");
+            } else {
+              bookmarks.add(id);
+              showToast("Bookmarked! ⭐", "bg-green-400");
+            }
+            write(KEY_BOOKMARKS, Array.from(bookmarks));
+            // Update only this button — no full re-render needed
+            const isNowBookmarked = bookmarks.has(id);
+            btn.classList.toggle("star", isNowBookmarked);
+            btn.innerHTML = isNowBookmarked
+              ? `<i class="fas fa-star text-yellow-400"></i>`
+              : `<i class="far fa-star text-gray-400"></i>`;
           })
         );
         grid.setAttribute("aria-busy", "false");
@@ -1039,63 +875,128 @@
         }, duration);
       }
 
-      /* Bookmark Toggle */
-      function toggleBookmark(id) {
-        if (bookmarks.has(id)) {
-          bookmarks.delete(id);
-          showToast("Bookmark removed.", "bg-red-400");
-        } else {
-          bookmarks.add(id);
-          showToast("Paper bookmarked!", "bg-green-400");
-        }
-        write(KEY_BOOKMARKS, Array.from(bookmarks));
-        renderGrid();
-      }
+      /* ── Preview Panel ────────────────────────────────────────── */
 
-      /* Bookmarks Panel */
-      openBookmarksEl?.addEventListener("click", () => {
+      /* ── Bookmarks Panel ──────────────────────────────────────── */
+      function renderBookmarksPanel() {
         const list = Array.from(bookmarks)
           .map((id) => papers.find((p) => p.id === id))
           .filter(Boolean);
 
-        let listHtml = list.length
-          ? `<ul class="space-y-3 mt-4">${list
-              .map(
-                (p) => `
-              <li class="p-3 rounded-lg flex justify-between items-center bg-gray-900 dark:bg-gray-800 light:bg-gray-100 shadow-md">
-                  <div>
-                      <div class="font-semibold">${escapeHtml(p.title)}</div>
-                      <div class="text-xs text-gray-500">${escapeHtml(
-                        p.branch
-                      )} • ${escapeHtml(p.year)}</div>
-                  </div>
-                  <button data-id="${
-                    p.id
-                  }" class="qb-btn secondary remove ml-4 text-xs p-2 rounded-full">Remove</button>
-              </li>`
-              )
-              .join("")}</ul>`
-          : "<p class='mt-4 text-gray-500'>No papers bookmarked yet.</p>";
+        panelContent.innerHTML = `
+          <h3 class="text-2xl font-bold text-yellow-400 mb-1">
+            <i class="fas fa-star mr-2"></i> Your Bookmarks
+          </h3>
+          <p class="text-xs text-gray-500 mb-4">${list.length} paper${list.length !== 1 ? "s" : ""} saved</p>
 
-        panelContent.innerHTML = `<h3 class="text-2xl font-bold text-yellow-400">Your Bookmarks</h3>${listHtml}`;
+          ${list.length === 0 ? `
+            <div class="flex flex-col items-center justify-center py-16 text-center">
+              <i class="far fa-star text-5xl text-gray-600 mb-4"></i>
+              <p class="text-gray-400 font-medium">No bookmarks yet</p>
+              <p class="text-xs text-gray-600 mt-1">Tap ☆ on any paper card to save it here</p>
+            </div>
+          ` : `
+            <ul class="space-y-3" id="bookmarkList">
+              ${list.map(p => `
+                <li data-id="${p.id}"
+                  class="rounded-xl border border-gray-700 overflow-hidden"
+                  style="background: rgba(255,255,255,0.04)">
+                  <!-- Paper info -->
+                  <div class="p-3 pb-2">
+                    <div class="flex items-center gap-2 mb-1">
+                      <i class="fas fa-file-pdf text-yellow-400 text-xs"></i>
+                      <span class="text-yellow-400 text-xs font-bold uppercase tracking-wide">${escapeHtml(p.branch)}</span>
+                      ${p.year && p.year !== "N/A" ? `<span class="text-gray-600 text-xs">• ${escapeHtml(p.year)}</span>` : ""}
+                    </div>
+                    <div class="font-bold text-sm leading-snug mb-0.5">${escapeHtml(p.title)}</div>
+                    <div class="text-xs text-gray-500">${escapeHtml(p.subject)}</div>
+                    <div class="text-xs text-gray-600 mt-1">
+                      <i class="fas fa-download mr-1"></i>${p.downloads || 0} downloads
+                    </div>
+                  </div>
+                  <!-- Action buttons -->
+                  <div class="flex border-t border-gray-700">
+                    <button data-id="${p.id}"
+                      class="bm-preview flex-1 py-2 text-xs font-semibold flex items-center justify-center gap-1 text-yellow-400 hover:bg-yellow-400/10 transition-colors border-r border-gray-700">
+                      <i class="fas fa-eye"></i> Preview
+                    </button>
+                    <button data-id="${p.id}"
+                      class="bm-download flex-1 py-2 text-xs font-semibold flex items-center justify-center gap-1 text-green-400 hover:bg-green-400/10 transition-colors border-r border-gray-700">
+                      <i class="fas fa-download"></i> Download
+                    </button>
+                    <button data-id="${p.id}"
+                      class="bm-remove flex-1 py-2 text-xs font-semibold flex items-center justify-center gap-1 text-red-400 hover:bg-red-400/10 transition-colors">
+                      <i class="fas fa-trash-alt"></i> Remove
+                    </button>
+                  </div>
+                </li>
+              `).join("")}
+            </ul>
+
+            <button id="clearAllBookmarks"
+              class="mt-4 w-full qb-btn secondary py-2 rounded-xl text-sm text-red-400 border-red-800 hover:bg-red-900/20">
+              <i class="fas fa-trash mr-2"></i> Clear All Bookmarks
+            </button>
+          `}
+        `;
+
         openPanel();
 
-        panelContent.querySelectorAll(".remove").forEach((b) =>
-          b.addEventListener("click", (e) => {
-            bookmarks.delete(e.currentTarget.dataset.id);
-            write(KEY_BOOKMARKS, Array.from(bookmarks));
-            showToast("Bookmark removed.", "bg-red-400");
-            // Re-render the panel content
-            openBookmarksEl.click();
+        // Preview buttons
+        panelContent.querySelectorAll(".bm-preview").forEach(btn =>
+          btn.addEventListener("click", () => {
+            openPreview(btn.dataset.id);
           })
         );
-      });
+
+        // Download buttons
+        panelContent.querySelectorAll(".bm-download").forEach(btn =>
+          btn.addEventListener("click", () => {
+            animateDownload(btn);
+            handleDownload(btn.dataset.id);
+          })
+        );
+
+        // Remove individual bookmark
+        panelContent.querySelectorAll(".bm-remove").forEach(btn =>
+          btn.addEventListener("click", () => {
+            const id = btn.dataset.id;
+            bookmarks.delete(id);
+            write(KEY_BOOKMARKS, Array.from(bookmarks));
+            showToast("Bookmark removed.", "bg-red-400");
+            // Update star on the card in the grid
+            const cardStar = document.querySelector(`.qb-bookmark[data-id="${id}"]`);
+            if (cardStar) {
+              cardStar.classList.remove("star");
+              cardStar.innerHTML = `<i class="far fa-star text-gray-400"></i>`;
+            }
+            // Re-render the panel
+            renderBookmarksPanel();
+          })
+        );
+
+        // Clear all
+        document.getElementById("clearAllBookmarks")?.addEventListener("click", () => {
+          if (!window.confirm("Remove all bookmarks?")) return;
+          bookmarks.clear();
+          write(KEY_BOOKMARKS, []);
+          // Reset all stars in grid
+          document.querySelectorAll(".qb-bookmark.star").forEach(btn => {
+            btn.classList.remove("star");
+            btn.innerHTML = `<i class="far fa-star text-gray-400"></i>`;
+          });
+          showToast("All bookmarks cleared.", "bg-gray-500");
+          renderBookmarksPanel();
+        });
+      }
+
+      openBookmarksEl?.addEventListener("click", renderBookmarksPanel);
 
       /* Admin Panel */
       $("openAdmin")?.addEventListener("click", () => {
-        const token = prompt('Admin token (demo): enter "admin"');
-        if (token !== "admin") {
-          showToast("Invalid token.", "bg-red-500");
+        const token = prompt('Admin Password (only for admin)');
+        if (token !== "cgu-beez@9955910844#") {
+          showToast("Invalid Password.", "bg-red-500");
           return;
         }
         renderAdmin();
@@ -1230,93 +1131,93 @@
 
       // handleImport and parseCSV removed – replaced by the PDF upload form in renderAdmin() (STEP 6)
 
-      /* PDF.js Viewer Integration */
+      /* PDF.js Viewer */
       async function renderPdfToContainer(url, containerEl) {
         if (typeof pdfjsLib === "undefined") {
-          containerEl.innerHTML =
-            '<div class="text-red-500">Error: PDF.js library not loaded.</div>';
+          containerEl.innerHTML = `
+            <div class="p-6 text-center text-red-400">
+              <i class="fas fa-exclamation-circle text-3xl mb-2"></i>
+              <p>PDF.js failed to load. Check your internet connection.</p>
+            </div>`;
           return;
         }
 
-        containerEl.innerHTML =
-          '<div class="pdf-loading text-center py-8 text-yellow-400"><i class="fas fa-spinner fa-spin mr-2"></i> Loading PDF Preview...</div>';
+        containerEl.innerHTML = `
+          <div class="flex items-center justify-center py-12 text-yellow-400">
+            <i class="fas fa-spinner fa-spin mr-2"></i> Loading PDF…
+          </div>`;
 
         try {
-          const loadingTask = pdfjsLib.getDocument({ url, cMapUrl: null });
+          const loadingTask = pdfjsLib.getDocument({
+            url,
+            cMapUrl: "https://unpkg.com/pdfjs-dist@2.16.105/cmaps/",
+            cMapPacked: true,
+          });
           const pdf = await loadingTask.promise;
-
-          containerEl.innerHTML = "";
-          const viewer = document.createElement("div");
-          viewer.className =
-            "grid grid-cols-1 md:grid-cols-4 gap-3 bg-gray-900 dark:bg-gray-800 light:bg-gray-100 p-3 rounded-lg";
-
-          const mainCol = document.createElement("div");
-          mainCol.className = "md:col-span-3 min-h-[320px]";
-          const sideCol = document.createElement("div");
-          sideCol.className =
-            "md:col-span-1 overflow-y-auto max-h-[360px] p-2 space-y-2";
-
-          viewer.appendChild(mainCol);
-          viewer.appendChild(sideCol);
-          containerEl.appendChild(viewer);
-
-          const canvas = document.createElement("canvas");
-          canvas.className = "w-full h-auto block";
-          mainCol.appendChild(canvas);
-
-          const ctx = canvas.getContext("2d");
+          const totalPages = pdf.numPages;
           let currentPage = 1;
 
-          async function renderPage(pageNum) {
-            currentPage = pageNum;
-            const page = await pdf.getPage(pageNum);
-            const viewport = page.getViewport({ scale: 1.5 });
-            canvas.width = Math.floor(viewport.width);
-            canvas.height = Math.floor(viewport.height);
+          // Build viewer layout
+          containerEl.innerHTML = `
+            <div class="flex flex-col">
+              <canvas id="pdfCanvas" class="w-full h-auto block rounded-lg shadow-lg"></canvas>
+            </div>`;
 
-            const renderContext = {
-              canvasContext: ctx,
-              viewport,
-            };
-            await page.render(renderContext).promise;
+          const canvas = document.getElementById("pdfCanvas");
+          const ctx    = canvas.getContext("2d");
 
-            // Update active thumbnail
-            sideCol.querySelectorAll(".thumb-wrap").forEach((el) => {
-              el.classList.remove(
-                "border-yellow-400",
-                "ring-2",
-                "ring-yellow-400"
-              );
-            });
-            document
-              .querySelector(`#thumb-${pageNum}`)
-              ?.classList.add("border-yellow-400", "ring-2", "ring-yellow-400");
+          async function renderPage(num) {
+            currentPage = num;
+            const page     = await pdf.getPage(num);
+            const viewport = page.getViewport({ scale: 1.6 });
+            canvas.width   = Math.floor(viewport.width);
+            canvas.height  = Math.floor(viewport.height);
+            await page.render({ canvasContext: ctx, viewport }).promise;
+
+            // Update page nav UI
+            const pageInfo = document.getElementById("pageInfo");
+            const prevBtn  = document.getElementById("prevPage");
+            const nextBtn  = document.getElementById("nextPage");
+            const pageNav  = document.getElementById("pageNav");
+
+            if (pageInfo) pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            if (prevBtn)  prevBtn.disabled = currentPage <= 1;
+            if (nextBtn)  nextBtn.disabled = currentPage >= totalPages;
+            if (pageNav && totalPages > 1) pageNav.classList.remove("hidden");
           }
 
-          const total = Math.min(pdf.numPages, 10);
-          for (let i = 1; i <= total; i++) {
-            const thumbWrap = document.createElement("div");
-            thumbWrap.id = `thumb-${i}`;
-            thumbWrap.className =
-              "thumb-wrap flex items-center p-2 rounded-lg cursor-pointer transition-all border border-transparent";
+          // Wire prev / next buttons
+          document.getElementById("prevPage")?.addEventListener("click", () => {
+            if (currentPage > 1) renderPage(currentPage - 1);
+          });
+          document.getElementById("nextPage")?.addEventListener("click", () => {
+            if (currentPage < totalPages) renderPage(currentPage + 1);
+          });
 
-            const statusText = i === 1 ? "Open first page" : "Page " + i;
-            thumbWrap.innerHTML = `
-              <div class="w-12 h-16 rounded-sm bg-white border border-gray-300 flex items-center justify-center text-xs text-gray-500 mr-2 shadow-sm">
-                  ${i}
-              </div>
-              <div class="text-sm font-medium">${statusText}</div>
-            `;
-            thumbWrap.addEventListener("click", () => renderPage(i));
-            sideCol.appendChild(thumbWrap);
-          }
+          // Keyboard navigation
+          const keyHandler = (e) => {
+            if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+              if (currentPage < totalPages) renderPage(currentPage + 1);
+            }
+            if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+              if (currentPage > 1) renderPage(currentPage - 1);
+            }
+          };
+          document.addEventListener("keydown", keyHandler);
+          // Clean up listener when panel closes
+          const origClose = closePanel;
 
           await renderPage(1);
+
         } catch (err) {
-          containerEl.innerHTML = `<div class="text-red-500 p-4 bg-red-100 dark:bg-red-900 light:bg-red-100 rounded-lg">Preview failed: ${escapeHtml(
-            String(err.message || err)
-          )}</div>`;
-          console.error("PDF render error", err);
+          console.error("PDF render error:", err);
+          containerEl.innerHTML = `
+            <div class="p-6 text-center">
+              <i class="fas fa-exclamation-triangle text-3xl text-red-400 mb-3"></i>
+              <p class="text-red-400 font-semibold mb-1">Preview failed</p>
+              <p class="text-xs text-gray-500">${escapeHtml(err.message || String(err))}</p>
+              <p class="text-xs text-gray-600 mt-2">This usually happens due to CORS restrictions.<br>Try downloading the file instead.</p>
+            </div>`;
         }
       }
 
@@ -1324,44 +1225,105 @@
       function openPreview(id) {
         const p = papers.find((x) => x.id === id);
         if (!p) return;
-        const hasPdf = !!p.pdf;
+
+        const isBookmarked = bookmarks.has(p.id);
 
         panelContent.innerHTML = `
-          <h3 class="text-2xl font-bold text-yellow-400">${escapeHtml(
-            p.title
-          )}</h3>
-          <p class="text-sm text-gray-500 mb-4">${escapeHtml(
-            p.branch
-          )} • ${escapeHtml(p.subject)} • ${escapeHtml(p.year)}</p>
+          <!-- Header -->
+          <div class="mb-4">
+            <div class="flex items-center gap-2 mb-1">
+              <i class="fas fa-file-pdf text-yellow-400"></i>
+              <span class="text-yellow-400 text-xs font-bold uppercase tracking-wide">${escapeHtml(p.branch)}</span>
+              ${p.year && p.year !== "N/A" ? `<span class="text-gray-500 text-xs">• ${escapeHtml(p.year)}</span>` : ""}
+            </div>
+            <h3 class="text-xl font-black leading-tight">${escapeHtml(p.title)}</h3>
+            <p class="text-sm text-gray-500 mt-0.5">${escapeHtml(p.subject)}</p>
+          </div>
 
-          <div id="pdfViewerArea" class="my-4"></div>
+          <!-- PDF Viewer area -->
+          <div id="pdfViewerArea" class="rounded-xl overflow-hidden mb-4 min-h-[200px]"
+            style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07)">
+            <div class="flex items-center justify-center py-12 text-yellow-400">
+              <i class="fas fa-spinner fa-spin mr-2"></i> Loading preview…
+            </div>
+          </div>
 
-          <div class="flex gap-3 justify-end pt-4 border-t border-gray-800 dark:border-gray-800 light:border-gray-200">
-            <button class="qb-btn" id="panelDownload">
-              <i class="fas fa-download mr-2"></i> Download
+          <!-- Page navigation (hidden until PDF loads) -->
+          <div id="pageNav" class="hidden flex items-center justify-between mb-4 px-1">
+            <button id="prevPage"
+              class="qb-btn secondary px-4 py-1.5 rounded-full text-sm flex items-center gap-1">
+              <i class="fas fa-chevron-left"></i> Prev
             </button>
-            <button class="qb-btn secondary" id="panelCloseBtn">
-              <i class="fas fa-times mr-2"></i> Close
+            <span id="pageInfo" class="text-sm text-gray-400 font-medium">Page 1</span>
+            <button id="nextPage"
+              class="qb-btn secondary px-4 py-1.5 rounded-full text-sm flex items-center gap-1">
+              Next <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <!-- Action bar -->
+          <div class="flex gap-2">
+            <button id="panelDownload"
+              class="qb-btn flex-1 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2">
+              <i class="fas fa-download"></i> Download
+            </button>
+            <button id="panelBookmark"
+              class="qb-btn secondary px-4 py-2.5 rounded-xl text-sm font-bold flex items-center justify-center gap-2 ${isBookmarked ? "text-yellow-400" : ""}">
+              <i class="${isBookmarked ? "fas" : "far"} fa-star"></i>
+              ${isBookmarked ? "Saved" : "Save"}
+            </button>
+            <button id="panelCloseBtn"
+              class="qb-btn secondary px-4 py-2.5 rounded-xl text-sm flex items-center justify-center gap-2">
+              <i class="fas fa-times"></i>
             </button>
           </div>
         `;
+
         openPanel();
 
-        document
-          .getElementById("panelDownload")
-          ?.addEventListener("click", () => {
-            handleDownload(p.id);
-            closePanel();
-          });
-        document
-          .getElementById("panelCloseBtn")
-          ?.addEventListener("click", closePanel);
+        // Download button
+        document.getElementById("panelDownload")?.addEventListener("click", () => {
+          animateDownload(document.getElementById("panelDownload"));
+          handleDownload(p.id);
+        });
 
+        // Bookmark toggle from preview panel
+        document.getElementById("panelBookmark")?.addEventListener("click", () => {
+          const bmBtn = document.getElementById("panelBookmark");
+          if (bookmarks.has(p.id)) {
+            bookmarks.delete(p.id);
+            showToast("Bookmark removed.", "bg-red-400");
+            bmBtn.innerHTML = `<i class="far fa-star"></i> Save`;
+          } else {
+            bookmarks.add(p.id);
+            showToast("Bookmarked! ⭐", "bg-green-400");
+            bmBtn.innerHTML = `<i class="fas fa-star text-yellow-400"></i> Saved`;
+          }
+          write(KEY_BOOKMARKS, Array.from(bookmarks));
+          // Sync star on the card in the grid
+          const cardStar = document.querySelector(`.qb-bookmark[data-id="${p.id}"]`);
+          if (cardStar) {
+            const isNow = bookmarks.has(p.id);
+            cardStar.classList.toggle("star", isNow);
+            cardStar.innerHTML = isNow
+              ? `<i class="fas fa-star text-yellow-400"></i>`
+              : `<i class="far fa-star text-gray-400"></i>`;
+          }
+        });
+
+        // Close button
+        document.getElementById("panelCloseBtn")?.addEventListener("click", closePanel);
+
+        // Load PDF
         const viewerArea = document.getElementById("pdfViewerArea");
-        if (hasPdf) {
+        if (p.pdf) {
           renderPdfToContainer(p.pdf, viewerArea);
         } else {
-          viewerArea.innerHTML = `<div class="p-8 border border-dashed border-gray-700 dark:border-gray-700 light:border-gray-300 rounded-lg text-center text-gray-500">No PDF attached for preview.</div>`;
+          viewerArea.innerHTML = `
+            <div class="p-10 text-center text-gray-500">
+              <i class="fas fa-file-pdf text-4xl mb-3 text-gray-600"></i>
+              <p>No PDF available for this paper.</p>
+            </div>`;
         }
       }
 
@@ -1660,25 +1622,3 @@
     </script>
   </body>
 </html>
-
-
-
-<!-- document.getElementById("uploadForm").addEventListener("submit", async (e)=>{
-
-  e.preventDefault()
-
-  const file = document.getElementById("pdf").files[0]
-
-  const formData = new FormData()
-  formData.append("pdf", file)
-
-  const res = await fetch("http://localhost:8900/upload",{
-    method:"POST",
-    body:formData
-  })
-
-  const data = await res.text()
-  console.log(data)
-
-})
- -->

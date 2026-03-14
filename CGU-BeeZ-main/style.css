@@ -18,13 +18,14 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 8%;
+  padding: 15px 5%;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
   position: fixed;
   width: 100%;
   z-index: 1000;
   animation: slideDown 1s ease forwards;
+  flex-wrap: wrap;
 }
 
 @keyframes slideDown {
@@ -109,7 +110,7 @@ body {
 
 /* CGU Animation */
 .hero-title {
-  font-size: 8rem;
+  font-size: clamp(3rem, 12vw, 8rem);
   font-weight: 900;
   color: #FFD700;
   letter-spacing: 10px;
@@ -123,6 +124,8 @@ body {
 .hero-subtitle {
   margin-top: 10px;
   color: #ccc;
+  font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+  padding: 0 10px;
 }
 
 .explore-btn {
@@ -135,6 +138,7 @@ body {
   border-radius: 30px;
   cursor: pointer;
   transition: 0.4s;
+  font-size: clamp(0.85rem, 2vw, 1rem);
 }
 
 .explore-btn:hover {
@@ -151,11 +155,12 @@ body {
   overflow: hidden;
 }
 
-.slides {
-  display: flex;
-  width: 400%;
-  height: 100%;
-  animation: slide 200s infinite;
+.slides img {
+  width: 25%;          /* ← change from 100% to 25% */
+  height: 100vh;
+  object-fit: cover;
+  opacity: 0.5;
+  flex-shrink: 0;      /* ← add this */
 }
 
 .slides img {
@@ -175,17 +180,34 @@ body {
 
 
 /* ================= RESPONSIVE ================= */
+/* ── Tablet (max 1024px) ── */
+@media (max-width: 1024px) {
+  .navbar {
+    padding: 15px 4%;
+  }
 
-@media(max-width: 768px) {
+  .nav-links {
+    gap: 24px;
+  }
+
+  .hero-title {
+    font-size: clamp(3.5rem, 10vw, 6rem);
+  }
+}
+
+/* ── Mobile Large (max 768px) ── */
+@media (max-width: 768px) {
   .nav-links {
     position: absolute;
-    top: 70px;
+    top: 65px;
     right: -100%;
     flex-direction: column;
     background: #000;
     width: 200px;
     padding: 20px;
+    gap: 16px;
     transition: 0.3s;
+    border-radius: 0 0 0 12px;
   }
 
   .nav-links.active {
@@ -196,13 +218,52 @@ body {
     display: block;
   }
 
-  .hero-title {
-    font-size: 4rem;
+  .hero-content {
+    padding: 0 16px;
   }
 
-  .explore-cards {
-    flex-direction: column;
-    align-items: center;
+  .slides {
+    animation: slide 20s infinite;
+  }
+}
+
+/* ── Mobile Small (max 480px) ── */
+@media (max-width: 480px) {
+  .logo {
+    font-size: 1.2rem;
+  }
+
+  .hero-title {
+    letter-spacing: 5px;
+  }
+
+  .hero-subtitle {
+    font-size: 0.8rem;
+  }
+
+  .explore-btn {
+    padding: 10px 24px;
+  }
+
+  .signup-btn {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ── Very Small screens (max 360px) ── */
+@media (max-width: 360px) {
+  .navbar {
+    padding: 12px 4%;
+  }
+
+  .logo {
+    font-size: 1rem;
+  }
+
+  .hero-title {
+    font-size: 2.8rem;
+    letter-spacing: 3px;
   }
 }
 

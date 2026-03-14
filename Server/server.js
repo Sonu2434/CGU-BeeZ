@@ -27,13 +27,49 @@ let userSchema = new mongoose.Schema({
   password: String,
   confpassword: String,
 });
-let UserModel = mongoose.model("userdatas", userSchema);
 
+let countDoc_Pdf=new mongoose.Schema({
+  counterSignup:Number,
+  counterPdf:Number,
+  DBcounter:Number
+})
+let Doc_PdfModel=mongoose.model("Doc-PdfCounter",countDoc_Pdf)
+let N=1
+let UserModel=mongoose.model("userdatas-"+1, userSchema);
+
+function recall(){
+async function DBnumber(){
+ let finder= await Doc_PdfModel.findOne( { _id:  new mongoose.Types.ObjectId("69b44c1e461f01e3fd47378d")});
+ return finder
+}
+DBnumber().then((RESP)=>{
+  
+  N=RESP.DBcounter
+  console.log(N)
+ UserModel = mongoose.model("userdatas-"+N, userSchema);
+
+})
+
+}
 // ─── PDF / PAPER SCHEMA  (STEP 1: updated fields) ────────────────────────────
 /*
   OLD schema had only:  { name, file }
   NEW schema stores:    { title, branch, subject, year, downloads, file, originalName }
 */
+// FOR COUNTING COLLECTION DOCUMENTS
+//------------------------------------------------
+// FOR COUNTING PDFs
+
+// async function f(){
+//   let e=await new Doc_PdfModel({
+//      counterSignup:0,
+//   counterPdf:0,
+//   DBcounter:0
+//   })  
+//   e.save()   
+// }
+// f()
+
 const pdfSchema = new mongoose.Schema({
   title: { type: String, required: true },
   branch: { type: String, default: "N/A" },
@@ -43,7 +79,9 @@ const pdfSchema = new mongoose.Schema({
   file: { type: Buffer, required: true },
   originalName: { type: String },
 });
+
 const PDF = mongoose.model("PDF", pdfSchema);
+
 
 // ─── MULTER (memory storage) ──────────────────────────────────────────────────
 
@@ -60,30 +98,60 @@ const storage = multer.memoryStorage();
 // ─────────────────────────────────────────────────────────────────────────────
 
 // Middleware: block duplicate accounts
-async function CheckingUser(req, resp, next) {
-  let existing = await UserModel.findOne({ email: req.body.email });
-  if (existing) {
-    resp.send("Account already exist");
-  } else {
-    next();
+async function CheckingUser(req, res, next) {
+
+  const email = req.body.email;
+  const db = mongoose.connection.db;
+
+  const cols = await db.listCollections().toArray();
+
+  const userCols = cols.filter(c => c.name.startsWith("userdatas-"));
+
+  for (const col of userCols) {
+
+    const exist = await db.collection(col.name).findOne({ email });
+
+    if (exist) {
+      return res.send("Account already exist");
+    }
+
   }
+
+  next();
 }
 
 // Create User
+
 app.post("/Signup", CheckingUser,async (req, res) => {
+  
   try {
-    
-      const DataSet = req.body;
-      console.log(DataSet);
-       let data= new UserModel(DataSet);
-       await data.save()
-    res.send("Received-Data")
+    const DataSet = req.body;
+    console.log(DataSet);
+    let data= new UserModel(DataSet);
+    await data.save()
+    let counter=   await UserModel.countDocuments()
+    if(counter==100){
+      await Doc_PdfModel.updateOne(  
+        { _id:  new mongoose.Types.ObjectId("69b44c1e461f01e3fd47378d")},
+        { $inc: { DBcounter: 1 } }
+      );
+      
+    }
+
+    let count=   await UserModel.countDocuments()//userdatas x DBcounter
+    await Doc_PdfModel.updateOne(  
+    { _id:  new mongoose.Types.ObjectId("69b44c1e461f01e3fd47378d")},
+    { $set: { counterSignup:count} }
+    );
+    recall()
+    res.send("Received-Data");
   } catch (error) {
     res.send("Error:400");
   }
 });
 
 //------------LOGIN PASSWORD---------------
+
 
 //------------LOGIN API---------------
 
@@ -93,28 +161,37 @@ app.post("/Login", async (req, res) => {
 
     const { email, password } = req.body;
 
-    // find user
-    let user = await UserModel.findOne({ email: email });
+    const db = mongoose.connection.db;
+
+    const cols = await db.listCollections().toArray();
+
+    const userCols = cols.filter(c => c.name.startsWith("userdatas-"));
+
+    let user = null;
+
+    for (const col of userCols) {
+
+      user = await db.collection(col.name).findOne({ email });
+
+      if (user) break;
+
+    }
 
     if (!user) {
-      res.send("User not found");
-      return
+      return res.send("User not found");
     }
 
-    // check password
     if (user.password !== password) {
-      res.send("Wrong password");
-      return
+      return res.send("Wrong password");
     }
 
-    //----Taking user First name--------------
-    
-const fullName = user.name;
-let firstName = fullName.split(" ")[0];
+    const firstName = user.name.split(" ")[0];
+
     res.send(firstName);
-//-------------------------------------------
+
   } catch (error) {
-console.log(error)
+
+    console.log(error);
     res.send("Login Error");
 
   }
