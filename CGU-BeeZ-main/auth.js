@@ -49,7 +49,7 @@ async function crt_acc() {
   };
 
   try {
-    const response = await fetch("http://localhost:8900/Signup", {
+    const response = await fetch("https://cgu-beez.onrender.com/Signup", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -84,7 +84,7 @@ async function login(){
     password: L_pass
   }
 
-  let response = await fetch("http://localhost:8900/Login",{
+  let response = await fetch("https://cgu-beez.onrender.com/Login",{
     method:"POST",
     headers:{
       "Content-Type":"application/json"
