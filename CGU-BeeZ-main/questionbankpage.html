@@ -593,7 +593,7 @@
       // renderGrid / filter / search / bookmark / preview code needs zero changes.
       async function loadPapersFromDB() {
         try {
-          const res = await fetch("http://localhost:8900/papers");
+          const res = await fetch("https://cgu-beez.onrender.com/papers");
           if (!res.ok) throw new Error("Server returned " + res.status);
           const data = await res.json();
 
@@ -605,7 +605,7 @@
             subject: p.subject,
             year: p.year,
             downloads: p.downloads || 0,
-            pdf: "http://localhost:8900/download/" + p._id,
+            pdf: "https://cgu-beez.onrender.com/download/" + p._id,
           }));
 
           renderChips();
@@ -1107,7 +1107,7 @@
           document.getElementById("doUpload").disabled = true;
 
           try {
-            const res  = await fetch("http://localhost:8900/upload", { method: "POST", body: formData });
+            const res  = await fetch("https://cgu-beez.onrender.com/upload", { method: "POST", body: formData });
             const text = await res.text();
 
             if (text === "PDF Uploaded") {
