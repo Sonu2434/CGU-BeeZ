@@ -816,17 +816,25 @@
       }
 
       /* Download Handling – STEP 5 */
-
-function handleDownload(id) {
+//new download Handler
+      function handleDownload(id) {
   const p = papers.find((x) => x.id === id);
-  if (!p || !p.pdf) return;
+  if (!p) return;
 
-  const link = document.createElement("a");
-  a.href = p.pdf;
-  a.target = "_blank";
-  document.body.appendChild(link);
-  a.click();
-  a.remove();
+  // Update local analytics display
+  analytics.downloads[p.id] = (analytics.downloads[p.id] || 0) + 1;
+  write(KEY_ANALYTICS, analytics);
+
+  p.downloads = (p.downloads || 0) + 1;
+
+  if (p.pdf) {
+    window.open(p.pdf, "_blank");   // PDF viewer open karega
+  } else {
+    showToast("PDF link missing for this item.", "bg-red-500");
+  }
+
+  renderGrid();
+  renderAnalyticsChart();
 }
 
       // Previous download handler 
