@@ -816,31 +816,47 @@
       }
 
       /* Download Handling – STEP 5 */
-      function handleDownload(id) {
-        const p = papers.find((x) => x.id === id);
-        if (!p) return;
 
-        // Update local analytics display
-        analytics.downloads[p.id] = (analytics.downloads[p.id] || 0) + 1;
-        write(KEY_ANALYTICS, analytics);
-        // Optimistically bump local counter for chart
-        p.downloads = (p.downloads || 0) + 1;
+function handleDownload(id) {
+  const p = papers.find((x) => x.id === id);
+  if (!p || !p.pdf) return;
 
-        // ── STEP 5: Download URL is always /download/:id ─────────────────────
-        // The backend increments the downloads counter in MongoDB automatically.
-        if (p.pdf) {
-          const a = document.createElement("a");
-          a.href = p.pdf; // e.g. http://localhost:8900/download/<_id>
-          a.download = p.title.replace(/\s/g, "_") + ".pdf";
-          document.body.appendChild(a);
-          a.click();
-          a.remove();
-        } else {
-          showToast("PDF link missing for this item.", "bg-red-500");
-        }
-        renderGrid();
-        renderAnalyticsChart();
-      }
+  const link = document.createElement("a");
+  link.href = p.pdf;
+  link.target = "_blank";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+      // Previous download handler 
+
+      
+      // function handleDownload(id) {
+      //   const p = papers.find((x) => x.id === id);
+      //   if (!p) return;
+
+      //   // Update local analytics display
+      //   analytics.downloads[p.id] = (analytics.downloads[p.id] || 0) + 1;
+      //   write(KEY_ANALYTICS, analytics);
+      //   // Optimistically bump local counter for chart
+      //   p.downloads = (p.downloads || 0) + 1;
+
+      //   // ── STEP 5: Download URL is always /download/:id ─────────────────────
+      //   // The backend increments the downloads counter in MongoDB automatically.
+      //   if (p.pdf) {
+      //     const a = document.createElement("a");
+      //     a.href = p.pdf; // e.g. http://localhost:8900/download/<_id>
+      //     a.download = p.title.replace(/\s/g, "_") + ".pdf";
+      //     document.body.appendChild(a);
+      //     a.click();
+      //     a.remove();
+      //   } else {
+      //     showToast("PDF link missing for this item.", "bg-red-500");
+      //   }
+      //   renderGrid();
+      //   renderAnalyticsChart();
+      // }
 
       // ── STEP 4/7: replaced by loadPapersFromDB() called in init()
       // write(KEY_PAPERS, papers) is no longer needed as source of truth is MongoDB.
