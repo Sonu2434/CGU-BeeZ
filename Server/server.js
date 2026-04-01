@@ -28,7 +28,10 @@ connectDB();
 // ─── USER SCHEMA ─────────────────────────────────────────────────────────────
 let userSchema = new mongoose.Schema({
   name: String,
-  email: String,
+  email: {
+    type: String,
+    unique: true   // ⭐ ADD THIS
+  },,
   password: String,
   confpassword: String,
 });
